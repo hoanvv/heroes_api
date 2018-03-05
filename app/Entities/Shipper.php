@@ -23,4 +23,24 @@ class Shipper extends Model
     {
         return $this->is_online = Shipper::ONLINE_SHIP;
     }
+
+    public function user()
+    {
+        return $this->belongsTo('App\Entities\User');
+    }
+
+    public function vehicles()
+    {
+        return $this->hasMany('App\Entities\Vehicle');
+    }
+
+    public function drivingLicenses()
+    {
+        return $this->hasMany('App\Entities\DrivingLicense');
+    }
+
+    public function trips()
+    {
+        return $this->hasMany('App\Entities\Trip');
+    }
 }

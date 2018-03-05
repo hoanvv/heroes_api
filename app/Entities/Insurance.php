@@ -12,4 +12,9 @@ class Insurance extends Model
         'back_image',
         'expiration_date'
     ];
+
+    public function vehicle()
+    {
+        return $this->belongsTo('App\Entities\Vehicle');
+    }
 }

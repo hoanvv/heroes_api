@@ -14,4 +14,9 @@ class VehicleRegistration extends Model
         'number_plate',
         'date',
     ];
+
+    public function vehicle()
+    {
+        return $this->belongsTo('App\Entities\Vehicle');
+    }
 }

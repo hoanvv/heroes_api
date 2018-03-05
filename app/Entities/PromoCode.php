@@ -24,4 +24,9 @@ class PromoCode extends Model
     {
         return $this->status == PromoCode::AVAILABLE_PROMOCODE; // status = 1;
     }
+
+    public function requestShips()
+    {
+        return $this->hasMany('App\Entities\RequestShip');
+    }
 }

@@ -12,4 +12,14 @@ class PackageOwner extends Model
         'longitude',
         'rating'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo('App\Entities\User');
+    }
+
+    public function requestShips()
+    {
+        return $this->hasMany('App\Entities\RequestShip');
+    }
 }

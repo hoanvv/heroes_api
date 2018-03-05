@@ -13,4 +13,9 @@ class PackageType extends Model
         'warning',
         'price'
     ];
+
+    public function requestShips()
+    {
+        return $this->hasMany('App\Entities\RequestShip');
+    }
 }

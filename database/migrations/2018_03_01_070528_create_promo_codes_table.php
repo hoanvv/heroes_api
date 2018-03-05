@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+use App\Entities\PromoCode;
+
 class CreatePromoCodesTable extends Migration
 {
     /**
@@ -21,7 +23,7 @@ class CreatePromoCodesTable extends Migration
             $table->dateTime('activation_date')->nullable();
             $table->dateTime('expiry_date')->nullable();
             $table->integer('usage_limit');
-            $table->integer('status')->default(1);
+            $table->integer('status')->default(PromoCode::AVAILABLE_PROMOCODE);
             $table->text('description')->nullable();
             $table->timestamps();
         });

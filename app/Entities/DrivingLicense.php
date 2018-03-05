@@ -15,4 +15,8 @@ class DrivingLicense extends Model
         'date'
     ];
 
+    public function shipper()
+    {
+        return $this->belongsTo('App\Entities\Shipper');
+    }
 }

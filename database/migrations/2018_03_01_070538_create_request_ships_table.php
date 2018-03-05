@@ -4,7 +4,9 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRequestsTable extends Migration
+use App\Entities\RequestShip;
+
+class CreateRequestShipsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,18 +17,19 @@ class CreateRequestsTable extends Migration
     {
         Schema::create('request_ships', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('package_owner_id')->unsigned();
+            $table->integer('user_id')->unsigned();
             $table->integer('package_type_id')->unsigned();
             $table->integer('promo_code_id')->unsigned();
             $table->string('receiver_name');
             $table->string('phone');
             $table->string('pickup_location');
             $table->string('destination');
+            $table->double('price');
+            $table->double('distance');
             $table->text('note')->nullable();
-            $table->integer('status')->default(1);
             $table->timestamps();
 
-            $table->foreign('package_owner_id')->references('id')->on('package_owners');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('package_type_id')->references('id')->on('package_types');
             $table->foreign('promo_code_id')->references('id')->on('promo_codes');
         });

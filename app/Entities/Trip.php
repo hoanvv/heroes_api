@@ -6,33 +6,24 @@ use Illuminate\Database\Eloquent\Model;
 
 class Trip extends Model
 {
-    const CANCELLED_TRIP = 0;
-    const DELIVERING_TRIP = 1;
-    const COMPLETED_TRIP = 2;
-
     protected $fillable = [
-        'request_id',
+        'request_ship_id',
         'shipper_id',
         'pickup_time',
         'dropoff_time',
         'package_owner_rating',
         'receiver_rating',
         'shipper_rating',
-        'status'
     ];
 
-    public function isCancelled()
+    // Relationships
+    public function shipper()
     {
-        return $this->status == Trip::CANCELLED_TRIP; // status = 0
+        return $this->belongsTo('App\Entities\Shipper');
     }
 
-    public function isDelivering()
+    public function requestShip()
     {
-        return $this->status == Trip::DELIVERING_TRIP; // status = 1
-    }
-
-    public function isCompleted()
-    {
-        return $this->status == Trip::COMPLETED_TRIP; // status = 2
+        return $this->belongsTo('App\Entities\RequestShip');
     }
 }

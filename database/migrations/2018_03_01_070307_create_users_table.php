@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+use App\Entities\User;
+
 class CreateUsersTable extends Migration
 {
     /**
@@ -22,9 +24,9 @@ class CreateUsersTable extends Migration
             $table->string('phone');
             $table->integer('role_id')->unsigned();;
             $table->string('authentication_token')->nullable();
-            $table->integer('verified')->default(0);
+            $table->integer('verified')->default(User::UNVERIFIED_USER); // value = 0
             $table->string('verification_token')->nullable();
-            $table->integer('blocked')->default(0);
+            $table->integer('blocked')->default(User::UNBLOCKED_USER); // value = 0
             $table->rememberToken();
             $table->timestamps();
 

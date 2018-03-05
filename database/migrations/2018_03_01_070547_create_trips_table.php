@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+use App\Entities\Trip;
+
 class CreateTripsTable extends Migration
 {
     /**
@@ -22,7 +24,6 @@ class CreateTripsTable extends Migration
             $table->float('package_owner_rating')->nullable();
             $table->float('receiver_rating')->nullable();
             $table->float('shipper_rating')->nullable();
-            $table->integer('status')->default(1);
             $table->timestamps();
 
             $table->foreign('request_ship_id')->references('id')->on('request_ships');

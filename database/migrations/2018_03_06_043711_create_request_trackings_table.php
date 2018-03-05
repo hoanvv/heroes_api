@@ -4,9 +4,9 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-use App\Entities\User;
+use App\Entities\RequestTracking;
 
-class CreatePackageOwnersTable extends Migration
+class CreateRequestTrackingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,14 +15,16 @@ class CreatePackageOwnersTable extends Migration
      */
     public function up()
     {
-        Schema::create('package_owners', function (Blueprint $table) {
+        Schema::create('request_trackings', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->double('latitude')->nullable();
-            $table->double('longitude')->nullable();
-            $table->float('rating')->default(User::DEFAULT_RATING);
+            $table->integer('request_ship_id')->unsigned();
+            $table->integer('status')->default(RequestTracking::WAITING_REQUEST);
+            $table->dateTime('changed_at');
 
+            $table->foreign('request_ship_id')->references('id')->on('request_ships');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->timestamps();
         });
     }
 
@@ -33,6 +35,6 @@ class CreatePackageOwnersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('package_owners');
+        Schema::dropIfExists('request_trackings');
     }
 }
