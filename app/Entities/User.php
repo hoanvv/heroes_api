@@ -74,4 +74,9 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Entities\RequestTracking');
     }
+    // Utility method
+    public function generateVerificationCode()
+    {
+        return
+    }
 }
