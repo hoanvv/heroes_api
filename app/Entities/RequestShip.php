@@ -11,13 +11,12 @@ class RequestShip extends Model
         'package_type_id',
         'promo_code_id',
         'receiver_name',
-        'phone',
+        'receiver_phone',
         'pickup_location',
         'destination',
         'price',
         'distance',
         'note',
-        'status'
     ];
 
     // Relationship
