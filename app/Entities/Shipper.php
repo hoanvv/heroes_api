@@ -2,9 +2,7 @@
 
 namespace App\Entities;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Shipper extends Model
+class Shipper extends User
 {
     public $timestamps = false;
 

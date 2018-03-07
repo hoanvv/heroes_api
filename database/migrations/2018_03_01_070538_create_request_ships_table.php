@@ -21,11 +21,11 @@ class CreateRequestShipsTable extends Migration
             $table->integer('package_type_id')->unsigned();
             $table->integer('promo_code_id')->unsigned();
             $table->string('receiver_name');
-            $table->string('phone');
+            $table->string('receiver_phone');
             $table->string('pickup_location');
             $table->string('destination');
-            $table->double('price');
-            $table->double('distance');
+            $table->float('price');
+            $table->float('distance');
             $table->text('note')->nullable();
             $table->timestamps();
 

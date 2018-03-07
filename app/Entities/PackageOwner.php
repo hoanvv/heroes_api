@@ -2,9 +2,7 @@
 
 namespace App\Entities;
 
-use Illuminate\Database\Eloquent\Model;
-
-class PackageOwner extends Model
+class PackageOwner extends User
 {
     public $timestamps = false;
 

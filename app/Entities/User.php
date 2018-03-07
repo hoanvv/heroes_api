@@ -4,12 +4,10 @@ namespace App\Entities;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
     use Notifiable;
-    use SoftDeletes;
 
     const VERIFIED_USER = 1;
     const UNVERIFIED_USER = 0;
@@ -18,8 +16,6 @@ class User extends Authenticatable
     const UNBLOCKED_USER = 0;
 
     const DEFAULT_RATING = 5.0;
-
-    protected $dates = ['deleted_at'];
 
     protected $fillable = [
         'first_name',
