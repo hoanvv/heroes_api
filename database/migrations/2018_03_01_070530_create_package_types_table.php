@@ -17,8 +17,7 @@ class CreatePackageTypesTable extends Migration
             $table->increments('id');
             $table->string('name')->unique();
             $table->integer('weight');
-            $table->integer('size');
-            $table->integer('warning');
+            $table->string('size');
             $table->double('price');
             $table->timestamps();
         });

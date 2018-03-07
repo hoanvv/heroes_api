@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Shipper extends Model
 {
+    public $timestamps = false;
+
     const OFFLINE_SHIP = 0;
     const ONLINE_SHIP = 1;
 

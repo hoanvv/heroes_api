@@ -1,8 +1,9 @@
 <?php
-
 use Faker\Generator as Faker;
 
 use App\Entities\User;
+use Faker\Provider\ro_RO as FakerRoRO;
+use Faker\Provider\en_ZA as FakerEnZA;
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -13,15 +14,46 @@ use App\Entities\User;
 | model instances for testing / seeding your application's database.
 |
 */
-
-$factory->define(App\User::class, function (Faker $faker) {
+// Factory for users
+$factory->define(App\Entities\User::class, function (Faker $faker) {
     static  $password;
+    $faker->addProvider(new FakerRoRO\PhoneNumber($faker));
     return [
-        'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
         'password' => $password ?: $password = bcrypt('secret'),
+        'first_name' => $faker->firstName,
+        'last_name' => $faker->lastName,
+        'phone' => $faker->premiumRatePhoneNumber,
+        'blocked' => User::UNBLOCKED_USER,
+        'role_id' => mt_rand(1,3),
         'remember_token' => str_random(10),
         'verified' => $verified = $faker->randomElement([User::VERIFIED_USER, User::UNVERIFIED_USER]),
-        'verification_token' => $verified == User::VERIFIED_USER ? null Use
+        'verification_token' => $verified == User::VERIFIED_USER ? null : User::generateVerificationCode(),
+        'authentication_token' => null,
     ];
 });
+
+//Factory for shippers
+$factory->define(App\Entities\Shipper::class, function (Faker $faker) {
+    $faker->addProvider(new FakerEnZA\Person($faker));
+    return [
+        'user_id' => 1,
+        'rating' => mt_rand(0, 5),
+        'latitude' => null,
+        'longitude' => null,
+        'avatar' => null,
+        'identity_card' => $faker->idNumber,
+        'is_online' => mt_rand(0, 1)
+    ];
+});
+
+//Factory for package owners
+$factory->define(App\Entities\PackageOwner::class, function (Faker $faker) {
+    return [
+        'user_id' => 1,
+        'rating' => mt_rand(0, 5),
+        'latitude' => null,
+        'longitude' => null
+    ];
+});
+
