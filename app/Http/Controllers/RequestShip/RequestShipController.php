@@ -32,6 +32,7 @@ class RequestShipController extends ApiController
     public function store(Request $request)
     {
         $rules = [
+            'authentication_token' => 'required|string',
             'package_type_id' => 'required|integer',
             'promo_code_id' => 'required|integer',
             'receiver_name' => 'required|string|max:100',
@@ -57,7 +58,7 @@ class RequestShipController extends ApiController
 
         $requestTracking = RequestTracking::create($requestTrackingData);
 
-        return $this->showOne($requestTracking, 201);
+        return $this->showOne($requestShip, 201);
     }
 
 //    /**
