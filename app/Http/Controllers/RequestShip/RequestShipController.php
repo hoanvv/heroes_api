@@ -42,7 +42,6 @@ class RequestShipController extends ApiController
         ];
 
         $this->validate($request, $rules);
-
         // Prepare data for request ship before insert
         $requestShipData = $request->all();
         $requestShipData['user_id'] = 7;

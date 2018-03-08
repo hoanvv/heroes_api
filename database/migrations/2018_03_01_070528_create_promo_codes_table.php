@@ -22,7 +22,7 @@ class CreatePromoCodesTable extends Migration
             $table->integer('validity');
             $table->dateTime('activation_date')->nullable();
             $table->dateTime('expiry_date')->nullable();
-            $table->integer('usage_limit');
+            $table->integer('usage_limit')->nullable();
             $table->integer('status')->default(PromoCode::AVAILABLE_PROMOCODE);
             $table->text('description')->nullable();
             $table->timestamps();
