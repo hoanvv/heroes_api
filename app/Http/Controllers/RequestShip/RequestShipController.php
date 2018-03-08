@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\RequestShip;
 
-use App\Entities\RequestShip;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
-//use App\Http\Controllers\Controller;
+
 use App\Entities\Shipper;
+use App\Entities\RequestShip;
+use App\Entities\RequestTracking;
 
 class RequestShipController extends ApiController
 {
@@ -31,26 +32,32 @@ class RequestShipController extends ApiController
     public function store(Request $request)
     {
         $rules = [
-            'package_type_id' => 'integer',
-            'promo_code_id' => 'integer',
+            'package_type_id' => 'required|integer',
+            'promo_code_id' => 'required|integer',
             'receiver_name' => 'required|string|max:100',
             'receiver_phone' => 'required|string|max:20',
-            'pickup_location' => 'required|json',
-            'destination' => 'required|json',
-            'note' => 'text'
+            'pickup_location' => 'required|string',
+            'destination' => 'required|string',
+            'note' => 'string'
         ];
 
         $this->validate($request, $rules);
-
         // Prepare data for request ship before insert
         $requestShipData = $request->all();
-        $requestShipData['user_id'] = 3;
+        $requestShipData['user_id'] = 7;
         $requestShipData['price'] = 20000.0;
         $requestShipData['distance'] = 5.3;
 
+        $requestShip = RequestShip::create($requestShipData);
         // Prepare data for request tracking before insert
+        $requestTrackingData['user_id'] = 7;
+        $requestTrackingData['request_ship_id'] = $requestShip->id;
+        $requestTrackingData['status'] = RequestTracking::WAITING_REQUEST;
+        $requestTrackingData['changed_at'] = $requestShip->created_at;
 
+        $requestTracking = RequestTracking::create($requestTrackingData);
 
+        return $this->showOne($requestTracking, 201);
     }
 
     /**

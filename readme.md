@@ -16,7 +16,11 @@ Shipping Service API is developed by Laravel Framework
 - DB_DATABASE=[your_name_database]
 - DB_USERNAME=[your_username]
 - DB_PASSWORD=[your_password]
+( Note: create mysql database before do this step ) 
 5. composer install
 6. php artisan key:generate
 7. php artisan migrate ( Remember turn on mysql server before run it )
+8. composer dump-autoload
+9. php artisan db:seed --class=DatabaseSeeder
+10. php artisan serve
 ```
