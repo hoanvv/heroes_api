@@ -53,6 +53,7 @@ class RequestShipController extends ApiController
         // Prepare data for request ship before insert
         $requestShipData = $request->all();
         $requestShipData['user_id'] = 5;
+        $requestShipData['distance'] /= 1000;
 
         $requestShip = RequestShip::create($requestShipData);
         // Prepare data for request tracking before insert
@@ -121,6 +122,8 @@ class RequestShipController extends ApiController
         );
 
         $packageWeight = PackageWeight::findOrFail($data['package_weight_id']);
+
+        $data['distance'] /= 1000;
 
         $price = $this->calculateFare(
             $data['distance'],

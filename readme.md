@@ -25,5 +25,5 @@ Shipping Service API is developed by Laravel Framework
 10. php artisan serve
 ```
 ## Shipping Service API List
-[Link](https://github.com/hoanvv/heroes_api/API-List.md)
+[Link](https://github.com/hoanvv/heroes_api/blob/master/API-List.md)
 
