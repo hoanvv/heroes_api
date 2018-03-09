@@ -23,3 +23,5 @@ Route::apiResources([
     'shipper' => 'Shipper\ShipperController',
     'requestShips' => 'RequestShip\RequestShipController',
 ]);
+
+Route::get('getPackageFare', 'RequestShip\RequestShipController@getPackageFare');

@@ -18,19 +18,21 @@ class CreateRequestShipsTable extends Migration
         Schema::create('request_ships', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->integer('package_type_id')->unsigned();
             $table->integer('promo_code_id')->unsigned();
+            $table->integer('package_weight_id')->unsigned();
             $table->string('receiver_name');
             $table->string('receiver_phone');
             $table->string('pickup_location');
             $table->string('destination');
             $table->float('price');
             $table->float('distance');
+            $table->integer('duration');
+            $table->string('size');
             $table->text('note')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('package_type_id')->references('id')->on('package_types');
+            $table->foreign('package_weight_id')->references('id')->on('package_weights');
             $table->foreign('promo_code_id')->references('id')->on('promo_codes');
         });
     }

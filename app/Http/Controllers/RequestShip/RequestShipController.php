@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers\RequestShip;
 
+use App\Entities\PackageWeight;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
 
 use App\Entities\Shipper;
 use App\Entities\RequestShip;
 use App\Entities\RequestTracking;
+use App\Traits\CalculateFare;
 
 class RequestShipController extends ApiController
 {
+    use CalculateFare;
     /**
      * Display a listing of the resource.
      *
@@ -18,9 +21,9 @@ class RequestShipController extends ApiController
      */
     public function index()
     {
-        $shippers = Shipper::all();
+        $requestShips = RequestShip::all();
 
-        return $this->showAll($shippers);
+        return $this->showAll($requestShips);
     }
 
     /**
@@ -33,21 +36,23 @@ class RequestShipController extends ApiController
     {
         $rules = [
             'authentication_token' => 'required|string',
-            'package_type_id' => 'required|integer',
+            'package_weight_id' => 'required|integer',
             'promo_code_id' => 'required|integer',
             'receiver_name' => 'required|string|max:100',
             'receiver_phone' => 'required|string|max:20',
-            'pickup_location' => 'required|string',
-            'destination' => 'required|string',
-            'note' => 'string'
+            'pickup_location' => 'required|string|json',
+            'destination' => 'required|string|json',
+            'distance' => 'required|numeric',
+            'duration' => 'required|integer',
+            'size' => 'required|string|json',
+            'note' => 'string',
+            'price' => 'required|numeric'
         ];
 
         $this->validate($request, $rules);
         // Prepare data for request ship before insert
         $requestShipData = $request->all();
-        $requestShipData['user_id'] = 7;
-        $requestShipData['price'] = 20000.0;
-        $requestShipData['distance'] = 5.3;
+        $requestShipData['user_id'] = 5;
 
         $requestShip = RequestShip::create($requestShipData);
         // Prepare data for request tracking before insert
@@ -93,5 +98,37 @@ class RequestShipController extends ApiController
     public function destroy($id)
     {
         //
+    }
+
+    public function getPackageFare(Request $request)
+    {
+        $rules = [
+            'package_weight_id' => 'required|integer',
+            'size' => 'required|string|json',
+            'distance' => 'required|numeric',
+            'duration' => 'required|integer'
+        ];
+
+        $this->validate($request, $rules);
+
+        $data = $request->all();
+
+        $size = json_decode($data['size']);
+        $volumetricWeight = $this->calculateVolumetricWeight(
+            $size->length,
+            $size->width,
+            $size->height
+        );
+
+        $packageWeight = PackageWeight::findOrFail($data['package_weight_id']);
+
+        $price = $this->calculateFare(
+            $data['distance'],
+            $data['duration'],
+            $volumetricWeight,
+            $packageWeight
+        );
+
+        echo $price;
     }
 }
