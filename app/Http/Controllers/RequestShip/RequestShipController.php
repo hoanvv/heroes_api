@@ -129,6 +129,7 @@ class RequestShipController extends ApiController
             $packageWeight
         );
 
-        echo $price;
+
+        return response()->json(['price' => $price], 200);
     }
 }
