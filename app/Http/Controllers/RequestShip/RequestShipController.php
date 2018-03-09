@@ -66,16 +66,16 @@ class RequestShipController extends ApiController
         return $this->showOne($requestShip, 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+//    /**
+//     * Display the specified resource.
+//     *
+//     * @param  int  $id
+//     * @return \Illuminate\Http\Response
+//     */
+//    public function show($id)
+//    {
+//        //
+//    }
 
     /**
      * Update the specified resource in storage.
@@ -128,6 +128,7 @@ class RequestShipController extends ApiController
             $volumetricWeight,
             $packageWeight
         );
+
 
         return response()->json(['price' => $price], 200);
     }
