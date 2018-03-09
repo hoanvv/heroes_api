@@ -24,3 +24,6 @@ Shipping Service API is developed by Laravel Framework
 9. php artisan db:seed --class=DatabaseSeeder
 10. php artisan serve
 ```
+## Shipping Service API List
+[Link](https://github.com/hoanvv/heroes_api/API-List.md)
+
