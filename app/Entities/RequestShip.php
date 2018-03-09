@@ -16,13 +16,16 @@ class RequestShip extends Model
         'destination',
         'price',
         'distance',
+        'size',
+        'duration',
+        'package_weight_id',
         'note',
     ];
 
     // Relationship
-    public function packageType()
+    public function packageWeight()
     {
-        return $this->belongsTo('App\Entities\PackageType');
+        return $this->belongsTo('App\Entities\PackageWeight');
     }
 
     public function promoCode()
