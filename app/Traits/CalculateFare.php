@@ -3,12 +3,12 @@
 namespace App\Traits;
 
 
-use App\Entities\PackageWeight;
+use App\Entities\PackageType;
 use Illuminate\Support\Facades\DB;
 
 trait CalculateFare
 {
-    protected function calculateFare($distance, $duration, $volumetricWeight, PackageWeight $packageWeight)
+    protected function calculateFare($distance, $duration, $packageTypePrice)
     {
         // VND
         $baseFare = 10000.0;
@@ -16,23 +16,20 @@ trait CalculateFare
         $durationRate = 100.0;
         $freeDistance = 2;
 
-        // Calculate weight price
-        $weightPrice = $this->calculateWeightPriceFromVolumetricWeight($volumetricWeight, $packageWeight);
-
         // Compare distance with free distance
         if ($distance <= $freeDistance) {
             $totalFare = $baseFare;
         } else {
             $distancePrice = $distanceRate * ($distance - $freeDistance);
-            $durationPrice = $durationRate * $duration / 60;
+            $durationPrice = $durationRate * $duration;
 
-            $totalFare = $baseFare + $distancePrice + $durationPrice + $weightPrice;
+            $totalFare = $baseFare + $distancePrice + $durationPrice + $packageTypePrice;
         }
 
         return $totalFare;
     }
 
-    protected function calculateVolumetricWeight($length, $width, $height)
+    private function calculateVolumetricWeight($length, $width, $height)
     {
         // Air shipment volumetric weight constant
         $ASVWC = 167; // kgs/cbm
@@ -46,39 +43,44 @@ trait CalculateFare
         return $volumetricWeight;
     }
 
-    private function calculateWeightPriceFromVolumetricWeight($volumetricWeight, PackageWeight $actualPackageWeight)
+    protected function calculateWeightPriceFromVolumetricWeight($length, $width, $height, PackageType $actualPackageType)
     {
-        $weightPrice = 0;
-        $endActualWeight = $actualPackageWeight->end_weight;
-
+        $packageTypePrice = 0;
+        $endActualWeight = $actualPackageType->end_weight;
+        // Calculate volumetric weight from size
+        $volumetricWeight = $this->calculateVolumetricWeight($length, $width, $height);
+        // Calculate package type price
         if ($endActualWeight < $volumetricWeight) {
 
-            $biggestPackage = DB::table('package_weights')
+            $biggestPackage = DB::table('package_types')
+                ->where('optional_package', PackageType::OPTIONAL_PACKAGE)
                 ->orderBy('end_weight', 'desc')->first();
 
             if ($volumetricWeight > $biggestPackage->end_weight) {
-                $weightPrice = $biggestPackage->price;
+                $packageTypePrice = $biggestPackage->price;
 
             } else {
-                $packageWeights = PackageWeight::where('end_weight', '>', $volumetricWeight)
-                    ->get();
+                $packageTypes = PackageType::where([
+                    'end_weight', '>', $volumetricWeight,
+                    'optional_package', PackageType::OPTIONAL_PACKAGE
+                ])->get();
 
-                foreach ($packageWeights as $packageWeight) {
-                    $startWeight = $packageWeight->start_weight;
-                    $endWeight = $packageWeight->end_weight;
+                foreach ($packageTypes as $packageType) {
+                    $startWeight = $packageType->start_weight;
+                    $endWeight = $packageType->end_weight;
 
                     if ($startWeight <= $volumetricWeight && $endWeight > $volumetricWeight) {
-                        $weightPrice = $packageWeight->price;
+                        $packageTypePrice = $packageType->price;
                         break;
 
                     }
                 }
             }
         } else {
-            $weightPrice = $actualPackageWeight->price;
+            $packageTypePrice = $actualPackageType->price;
 
         }
 
-        return $weightPrice;
+        return $packageTypePrice;
     }
 }

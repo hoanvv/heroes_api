@@ -4,7 +4,9 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePackageWeightsTable extends Migration
+use \App\Entities\PackageType;
+
+class CreatePackageTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +15,13 @@ class CreatePackageWeightsTable extends Migration
      */
     public function up()
     {
-        Schema::create('package_weights', function (Blueprint $table) {
+        Schema::create('package_types', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->integer('start_weight');
-            $table->integer('end_weight');
+            $table->text('description')->nullable();
+            $table->integer('optional_package')->default(PackageType::NORMAL_PACKAGE);
+            $table->integer('start_weight')->nullable();
+            $table->integer('end_weight')->nullable();
             $table->float('price');
             $table->timestamps();
         });
@@ -30,6 +34,6 @@ class CreatePackageWeightsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('package_weights');
+        Schema::dropIfExists('package_types');
     }
 }

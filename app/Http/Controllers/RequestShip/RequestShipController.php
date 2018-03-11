@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers\RequestShip;
 
-use App\Entities\PackageWeight;
+use App\Entities\PackageType;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
 
 use App\Entities\Shipper;
 use App\Entities\RequestShip;
 use App\Entities\RequestTracking;
-use App\Traits\CalculateFare;
 
 class RequestShipController extends ApiController
 {
-    use CalculateFare;
     /**
      * Display a listing of the resource.
      *
@@ -27,16 +25,50 @@ class RequestShipController extends ApiController
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @OAS\Post(
+     *     path="/requestShips",
+     *     tags={"RequestShips"},
+     *     summary="Register a package to delivery",
+     *     operationId="store",
+     *     @OAS\Parameter(
+     *           "promo_code_id": "1",
+     *           "receiver_name": "Vo Van Hoang",
+     *           "receiver_phone": "068798798789",
+     *           "pickup_location": "{\"latitude\":16.231231231, \"longitude\":102.1231231}",
+     *           "destination": "{\"latitude\":16.231231231, \"longitude\":102.1231231}",
+     *           "distance": "3.3",
+     *           "duration": "180",
+     *           "package_type_id": "1",
+     *           "user_id": 5,
+     *           "note": "Register a package",
+     *           "authentication_token": "WERTERWTSDFGVC234ASDFRA2TD634",
+     *           "price": 20000
+     *     ),
+     *     @OAS\Response(
+     *         "data": {
+     *               "promo_code_id": "1",
+     *               "receiver_name": "Vo Van Hoang",
+     *               "receiver_phone": "068798798789",
+     *               "pickup_location": "{\"latitude\":16.231231231, \"longitude\":102.1231231}",
+     *               "destination": "{\"latitude\":16.231231231, \"longitude\":102.1231231}",
+     *               "distance": 0.0033,
+     *               "duration": "180",
+     *               "package_type_id": "1",
+     *               "user_id": 5,
+     *               "note": "asdfasdfasdfas",
+     *               "price": 20000,
+     *               "updated_at": "2018-03-11 15:13:12",
+     *               "created_at": "2018-03-11 15:13:12",
+     *               "id": 1
+     *           }
+     *     )
+     * )
      */
     public function store(Request $request)
     {
         $rules = [
             'authentication_token' => 'required|string',
-            'package_weight_id' => 'required|integer',
+            'package_type_id' => 'required|integer',
             'promo_code_id' => 'required|integer',
             'receiver_name' => 'required|string|max:100',
             'receiver_phone' => 'required|string|max:20',
@@ -44,39 +76,41 @@ class RequestShipController extends ApiController
             'destination' => 'required|string|json',
             'distance' => 'required|numeric',
             'duration' => 'required|integer',
-            'size' => 'required|string|json',
+            'size' => 'string|json',
             'note' => 'string',
             'price' => 'required|numeric'
         ];
 
         $this->validate($request, $rules);
+
         // Prepare data for request ship before insert
         $requestShipData = $request->all();
         $requestShipData['user_id'] = 5;
         $requestShipData['distance'] /= 1000;
-
+        // Insert data for request ship into database
         $requestShip = RequestShip::create($requestShipData);
+
         // Prepare data for request tracking before insert
         $requestTrackingData['user_id'] = 7;
         $requestTrackingData['request_ship_id'] = $requestShip->id;
         $requestTrackingData['status'] = RequestTracking::WAITING_REQUEST;
         $requestTrackingData['changed_at'] = $requestShip->created_at;
-
+        // Insert data for request tracking into database
         $requestTracking = RequestTracking::create($requestTrackingData);
 
         return $this->showOne($requestShip, 201);
     }
 
-//    /**
-//     * Display the specified resource.
-//     *
-//     * @param  int  $id
-//     * @return \Illuminate\Http\Response
-//     */
-//    public function show($id)
-//    {
-//        //
-//    }
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
 
     /**
      * Update the specified resource in storage.
@@ -100,39 +134,43 @@ class RequestShipController extends ApiController
     {
         //
     }
-
-    public function getPackageFare(Request $request)
-    {
-        $rules = [
-            'package_weight_id' => 'required|integer',
-            'size' => 'required|string|json',
-            'distance' => 'required|numeric',
-            'duration' => 'required|integer'
-        ];
-
-        $this->validate($request, $rules);
-
-        $data = $request->all();
-
-        $size = json_decode($data['size']);
-        $volumetricWeight = $this->calculateVolumetricWeight(
-            $size->length,
-            $size->width,
-            $size->height
-        );
-
-        $packageWeight = PackageWeight::findOrFail($data['package_weight_id']);
-
-        $data['distance'] /= 1000;
-
-        $price = $this->calculateFare(
-            $data['distance'],
-            $data['duration'],
-            $volumetricWeight,
-            $packageWeight
-        );
-
-
-        return response()->json(['price' => $price], 200);
-    }
+//
+//    public function getPackageFare(Request $request)
+//    {
+//        $rules = [
+//            'package_type_id' => 'required|integer',
+//            'size' => 'string|json',
+//            'distance' => 'required|numeric',
+//            'duration' => 'required|integer'
+//        ];
+//
+//        $this->validate($request, $rules);
+//
+//        $data = $request->all();
+//
+//        $packageType = PackageType::findOrFail($data['package_type_id']);
+//
+//        if ($packageType->isOptional() && $request->has('size')) {
+//            $size = json_decode($data['size']);
+//            $packageTypePrice = $this->calculateWeightPriceFromVolumetricWeight(
+//                $size->length,
+//                $size->width,
+//                $size->height,
+//                $packageType
+//            );
+//        } else {
+//            $packageTypePrice = $packageType->price;
+//        }
+//        // Convert units
+//        $data['distance'] /= 1000; // from meter to kilometer
+//        $data['duration'] /= 60; // from second to minute
+//
+//        $price = $this->calculateFare(
+//            $data['distance'],
+//            $data['duration'],
+//            $packageTypePrice
+//        );
+//
+//        return response()->json(['price' => $price], 200);
+//    }
 }
