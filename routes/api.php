@@ -14,5 +14,5 @@ Route::apiResource('requestShips', 'RequestShip\RequestShipController');
 /*
 * Package type
 */
-Route::apiResource('packageTypes', 'PackageType\PackageTypeController');
-//Route::get('getPackageFare', 'RequestShip\RequestShipController@getPackageFare');
+Route::get('packageTypes/optional', 'PackageType\PackageTypeController@getOptionalPackageTypes');
+Route::get('packageTypes/normal', 'PackageType\PackageTypeController@getNormalPackageTypes');
