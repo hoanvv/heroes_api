@@ -2,84 +2,37 @@
 
 namespace App\Http\Controllers\PackageType;
 
+use App\Entities\PackageType;
+use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
-class PackageTypeController extends Controller
+class PackageTypeController extends ApiController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function getOptionalPackageTypes()
     {
-        //
+        $optionPackages = PackageType::where('optional_package', PackageType::OPTIONAL_PACKAGE)
+            ->get();
+        return $this->showAll($optionPackages);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function getNormalPackageTypes()
     {
-        //
+        $optionPackages = PackageType::where('optional_package', PackageType::NORMAL_PACKAGE)
+            ->get();
+        $otherPackage = collect([
+            "id" => 0,
+            "name" => "Others",
+            "description" => null,
+            "optional_package" => 0,
+            "start_weight" => null,
+            "end_weight" => null,
+            "price" => null,
+            "created_at" => null,
+            "updated_at" => null
+        ]);
+        $optionPackages->push($otherPackage);
+
+        return $this->showAll($optionPackages);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

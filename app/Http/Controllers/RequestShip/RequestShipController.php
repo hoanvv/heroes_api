@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\RequestShip;
 
-use App\Entities\PackageType;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
+use Kreait\Firebase\Factory;
 
-use App\Entities\Shipper;
 use App\Entities\RequestShip;
 use App\Entities\RequestTracking;
+use App\Traits\FirebaseConnection;
 
 class RequestShipController extends ApiController
 {
+    use FirebaseConnection;
     /**
      * Display a listing of the resource.
      *
@@ -97,6 +98,17 @@ class RequestShipController extends ApiController
         $requestTrackingData['changed_at'] = $requestShip->created_at;
         // Insert data for request tracking into database
         $requestTracking = RequestTracking::create($requestTrackingData);
+        // Insert data for request package into firebase
+        $firebase = (new Factory())
+            ->withServiceAccount($this->registerService())
+            ->create();
+        $db = $firebase->getDatabase();
+
+        $pickup_location = $requestShip->only('pickup_location');
+        $coordinate = json_decode($pickup_location['pickup_location'], true);
+
+        $db->getReference("package/available/{$requestShip->id}")
+            ->set($coordinate);
 
         return $this->showOne($requestShip, 201);
     }
@@ -104,12 +116,13 @@ class RequestShipController extends ApiController
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param RequestShip $requestShip
+     * @return void
      */
-    public function show($id)
+    public function show(RequestShip $requestShip)
     {
-        //
+        $detail = $requestShip->with(['user', 'packageType'])->first();
+        return $this->showOne($detail);
     }
 
     /**
