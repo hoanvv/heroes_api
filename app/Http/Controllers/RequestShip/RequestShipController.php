@@ -35,7 +35,7 @@ class RequestShipController extends ApiController
      *          schema={"$ref": "#/definitions/NewRequestShip"},
      * 			required=true,
      * 			type="integer",
-     * 			description="UUID",
+     * 			description="ID",
      * 		),
      *     @SWG\Response(
      *          response=201,
@@ -58,7 +58,9 @@ class RequestShipController extends ApiController
             'receiver_name' => 'required|string|max:100',
             'receiver_phone' => 'required|string|max:20',
             'pickup_location' => 'required|string|json',
+            'pickup_location_address' => 'required|string',
             'destination' => 'required|string|json',
+            'destination_address' => 'required|string',
             'distance' => 'required|numeric',
             'duration' => 'required|integer',
             'size' => 'string|json',
@@ -109,7 +111,7 @@ class RequestShipController extends ApiController
      *          in="path",
      *          required=true,
      *          type="integer",
-     *          description="UUID",
+     *          description="ID",
      * 		),
      *     @SWG\Response(
      *          response=200,
@@ -122,9 +124,9 @@ class RequestShipController extends ApiController
      *   )
      * ),
      */
-    public function show(RequestShip $requestShip)
+    public function show($id)
     {
-        $detail = $requestShip->with(['user', 'packageType'])->first();
+        $detail = RequestShip::with(['user', 'packageType'])->findOrFail($id);
         return $this->showOne($detail);
     }
 
