@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\RequestShip;
 
-use App\Entities\PackageType;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
+use Kreait\Firebase\Factory;
 
-use App\Entities\Shipper;
 use App\Entities\RequestShip;
 use App\Entities\RequestTracking;
+use App\Traits\FirebaseConnection;
 
 class RequestShipController extends ApiController
 {
+    use FirebaseConnection;
     /**
      * Display a listing of the resource.
      *
@@ -23,47 +24,31 @@ class RequestShipController extends ApiController
 
         return $this->showAll($requestShips);
     }
-
     /**
-     * @OAS\Post(
+     * @SWG\Post(
      *     path="/requestShips",
-     *     tags={"RequestShips"},
-     *     summary="Register a package to delivery",
-     *     operationId="store",
-     *     @OAS\Parameter(
-     *           "promo_code_id": "1",
-     *           "receiver_name": "Vo Van Hoang",
-     *           "receiver_phone": "068798798789",
-     *           "pickup_location": "{\"latitude\":16.231231231, \"longitude\":102.1231231}",
-     *           "destination": "{\"latitude\":16.231231231, \"longitude\":102.1231231}",
-     *           "distance": "3.3",
-     *           "duration": "180",
-     *           "package_type_id": "1",
-     *           "user_id": 5,
-     *           "note": "Register a package",
-     *           "authentication_token": "WERTERWTSDFGVC234ASDFRA2TD634",
-     *           "price": 20000
-     *     ),
-     *     @OAS\Response(
-     *         "data": {
-     *               "promo_code_id": "1",
-     *               "receiver_name": "Vo Van Hoang",
-     *               "receiver_phone": "068798798789",
-     *               "pickup_location": "{\"latitude\":16.231231231, \"longitude\":102.1231231}",
-     *               "destination": "{\"latitude\":16.231231231, \"longitude\":102.1231231}",
-     *               "distance": 0.0033,
-     *               "duration": "180",
-     *               "package_type_id": "1",
-     *               "user_id": 5,
-     *               "note": "asdfasdfasdfas",
-     *               "price": 20000,
-     *               "updated_at": "2018-03-11 15:13:12",
-     *               "created_at": "2018-03-11 15:13:12",
-     *               "id": 1
-     *           }
-     *     )
-     * )
+     *     tags={"Request Ship"},
+     *     summary="Create new request ship",
+     *     @SWG\Parameter(
+     * 			name="id",
+     * 			in="body",
+     *          schema={"$ref": "#/definitions/NewRequestShip"},
+     * 			required=true,
+     * 			type="integer",
+     * 			description="UUID",
+     * 		),
+     *     @SWG\Response(
+     *          response=201,
+     *          description="A newly-created request ship",
+     *          @SWG\Schema(ref="#/definitions/RequestShip")
+     *      ),
+     *     @SWG\Response(
+     *          response="default",
+     *          description="error"
+     *   )
+     * ),
      */
+
     public function store(Request $request)
     {
         $rules = [
@@ -97,6 +82,13 @@ class RequestShipController extends ApiController
         $requestTrackingData['changed_at'] = $requestShip->created_at;
         // Insert data for request tracking into database
         $requestTracking = RequestTracking::create($requestTrackingData);
+        // Insert data for request package into firebase
+        $path = "package/available/{$requestShip->id}";
+
+        $pickup_location = $requestShip->only('pickup_location');
+        $coordinate = json_decode($pickup_location['pickup_location'], true);
+
+        $this->saveDataWithoutAuthentication($path, $coordinate);
 
         return $this->showOne($requestShip, 201);
     }
@@ -104,12 +96,36 @@ class RequestShipController extends ApiController
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param RequestShip $requestShip
+     * @return void
      */
-    public function show($id)
+    /**
+     * @SWG\Get(
+     *     path="/requestShip/{id}",
+     *     tags={"Request Ship"},
+     *     summary="Fetch request ship",
+     *     @SWG\Parameter(
+     *          name="id",
+     *          in="path",
+     *          required=true,
+     *          type="integer",
+     *          description="UUID",
+     * 		),
+     *     @SWG\Response(
+     *          response=200,
+     *          description="An employee",
+     *          @SWG\Schema(ref="#/definitions/NewRequestShip")
+     *      ),
+     *     @SWG\Response(
+     *          response="default",
+     *          description="error",
+     *   )
+     * ),
+     */
+    public function show(RequestShip $requestShip)
     {
-        //
+        $detail = $requestShip->with(['user', 'packageType'])->first();
+        return $this->showOne($detail);
     }
 
     /**

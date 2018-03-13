@@ -23,7 +23,9 @@ class CreateRequestShipsTable extends Migration
             $table->string('receiver_name');
             $table->string('receiver_phone');
             $table->string('pickup_location');
+            $table->string('pickup_location_address');
             $table->string('destination');
+            $table->string('destination_address');
             $table->float('price');
             $table->float('distance');
             $table->integer('duration');

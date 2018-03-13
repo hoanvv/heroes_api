@@ -1,27 +1,209 @@
 {
     "swagger": "2.0",
     "info": {
-        "title": "This is my website cool API",
-        "description": "Api description...",
-        "termsOfService": "",
+        "title": "Heroes Swagger",
+        "description": "Swagger creates human-readable documentation for your APIs.",
         "contact": {
-            "email": "contact@mysite.com"
+            "name": "Harley",
+            "email": "harley@enclave.vn"
         },
         "license": {
-            "name": "Private License",
-            "url": "URL to the license"
+            "name": "Unlicense"
         },
-        "version": "1.0.0"
+        "version": "1.0"
     },
-    "host": "127.0.0.1:8000",
-    "basePath": "/api/v1",
-    "schemes": [
-        "http"
+    "host": "http://127.0.0.1",
+    "basePath": "/api",
+    "consumes": [
+        "application/json"
     ],
-    "paths": {},
-    "definitions": {},
-    "externalDocs": {
-        "description": "Find out more about my website",
-        "url": "http..."
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/requestShips": {
+            "post": {
+                "tags": [
+                    "Request Ship"
+                ],
+                "summary": "Create new request ship",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "body",
+                        "description": "UUID",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/NewRequestShip"
+                        },
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "A newly-created request ship",
+                        "schema": {
+                            "$ref": "#/definitions/RequestShip"
+                        }
+                    },
+                    "default": {
+                        "description": "error"
+                    }
+                }
+            }
+        },
+        "/requestShip/{id}": {
+            "get": {
+                "tags": [
+                    "Request Ship"
+                ],
+                "summary": "Fetch request ship",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "UUID",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An employee",
+                        "schema": {
+                            "$ref": "#/definitions/NewRequestShip"
+                        }
+                    },
+                    "default": {
+                        "description": "error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Timestamps": {
+            "properties": {
+                "created_at": {
+                    "description": "Creation date",
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2017-03-01 00:00:00"
+                },
+                "updated_at": {
+                    "description": "Last updated",
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2017-03-01 00:00:00"
+                }
+            }
+        },
+        "NewRequestShip": {
+            "required": [
+                "user_id",
+                "package_type_id",
+                "promo_code_id",
+                "receiver_name",
+                "receiver_phone",
+                "pickup_location",
+                "pickup_location_address",
+                "destination",
+                "destination_address",
+                "price",
+                "distance",
+                "duration",
+                "size"
+            ],
+            "properties": {
+                "user_id": {
+                    "description": "Package owner ID",
+                    "type": "integer",
+                    "example": "1"
+                },
+                "package_type_id": {
+                    "description": "Package type ID",
+                    "type": "integer",
+                    "example": "1"
+                },
+                "promo_code_id": {
+                    "description": "Promo code ID",
+                    "type": "integer",
+                    "example": "1"
+                },
+                "receiver_name": {
+                    "description": "Receiver's Name",
+                    "type": "string",
+                    "example": "John Smith"
+                },
+                "receiver_phone": {
+                    "description": "Receiver's Phone",
+                    "type": "string",
+                    "example": "0981545454"
+                },
+                "pickup_location": {
+                    "description": "Pick up location",
+                    "type": "string",
+                    "format": "json",
+                    "example": "{latitude:16.231231231, longitude:102.1231231}"
+                },
+                "pickup_location_address": {
+                    "description": "Package's Pick up location address",
+                    "type": "string",
+                    "example": "453 Hoang Dieu, Hai Chau, Danang"
+                },
+                "destination": {
+                    "description": "Package's Destination",
+                    "type": "string",
+                    "format": "json",
+                    "example": "{latitude:16.41231231, longitude:102.1231231}"
+                },
+                "destination_address": {
+                    "description": "Pick up location address",
+                    "type": "string",
+                    "example": "23 Trung Nu Vuong, Hai Chau, Danang"
+                },
+                "price": {
+                    "description": "Package Fare",
+                    "type": "float",
+                    "example": "20000"
+                },
+                "distance": {
+                    "description": "Distance between pickup location and destination (km)",
+                    "type": "string",
+                    "example": "3.3"
+                },
+                "duration": {
+                    "description": "Duration between pickup location and destination (s)",
+                    "type": "integer",
+                    "example": "600"
+                },
+                "size": {
+                    "description": "Package's size",
+                    "type": "string",
+                    "format": "json",
+                    "example": "{length: 15, width: 20, height: 15}"
+                },
+                "note": {
+                    "description": "Detail information for package",
+                    "type": "string",
+                    "example": "String"
+                }
+            }
+        },
+        "RequestShip": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/NewRequestShip"
+                },
+                {
+                    "$ref": "#/definitions/Timestamps"
+                },
+                {
+                    "required": [
+                        "id"
+                    ]
+                }
+            ]
+        }
     }
 }
