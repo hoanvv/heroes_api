@@ -88,9 +88,11 @@ class RequestShipController extends ApiController
         $path = "package/available/{$requestShip->id}";
 
         $pickup_location = $requestShip->only('pickup_location');
-        $coordinate = json_decode($pickup_location['pickup_location'], true);
+        $data = json_decode($pickup_location['pickup_location'], true);
+        $extraData = $requestShip->only(['distance', 'destination_address', 'price']);
+        $data = array_merge($data, $extraData);
 
-        $this->saveDataWithoutAuthentication($path, $coordinate);
+        $this->saveDataWithoutAuthentication($path, $data);
 
         return $this->showOne($requestShip, 201);
     }
