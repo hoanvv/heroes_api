@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers\Trip;
 
+use App\Entities\RequestShip;
+use App\Entities\RequestTracking;
+use App\Entities\Trip;
+use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Traits\UpdateRequestTracking;
+use App\Traits\FirebaseConnection;
 
-class TripController extends Controller
+class TripController extends ApiController
 {
+    use UpdateRequestTracking;
+    use FirebaseConnection;
     /**
      * Display a listing of the resource.
      *
@@ -31,7 +38,11 @@ class TripController extends Controller
      *     @SWG\Parameter(
      * 			name="id",
      * 			in="body",
-     *          schema={"$ref": "#/definitions/NewTrip"},
+     *          @SWG\Schema(
+     *              required={"request_ship_id", "authentication_token"},
+     *              @SWG\Property(property="request_ship_id",  type="integer"),
+     *              @SWG\Property(property="authentication_token",  type="string")
+     *          ),
      * 			required=true,
      * 			type="integer",
      * 			description="ID",
@@ -51,7 +62,48 @@ class TripController extends Controller
 
     public function store(Request $request)
     {
-        //
+        $rules = [
+            'authentication_token' => 'required|string',
+            'request_ship_id' => 'required|integer',
+        ];
+
+        $this->validate($request, $rules);
+
+        // Prepare data for trip before insert
+        $tripData = $request->all();
+        $tripData['shipper_id'] = 6;
+
+        // Insert data for trip into database
+        $trip = Trip::create($tripData);
+
+        // update status of request tracking
+        $status = RequestTracking::ACCEPTED_REQUEST;
+        $requestShipId = $tripData['request_ship_id'];
+        $shipperId = $tripData['shipper_id'];
+        $this->updateRequestTracking($shipperId, $requestShipId, $status);
+
+        // Retrieve this request ship from package/available/{$requestShipId}
+        $path = 'package/available/' . $requestShipId;
+        $availablePackage = $this->retrieveData($path);
+
+        // Remove this request ship from package/available/{$requestShipId}
+        $this->deleteData($path);
+
+        // Insert this request ship into package/shipper/{shipper_id}
+        $path = "package/shipper/{$shipperId}/{$requestShipId}";
+        $this->saveData($path, $availablePackage);
+
+        // Return pickup location and destination for showing the route on map
+        $data = RequestShip::findOrFail($requestShipId)->only(['pickup_location', 'destination']);
+        $array = array_values($data);
+        $arrayTemp = [];
+        foreach($array as $item) {
+            $json_array = json_decode($item, true);
+            array_push($arrayTemp, $json_array);
+        }
+
+        return response()->json(['data' => $arrayTemp], 200);
+
     }
 
     /**

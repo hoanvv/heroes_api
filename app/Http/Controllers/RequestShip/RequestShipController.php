@@ -93,7 +93,7 @@ class RequestShipController extends ApiController
         $extraData = $requestShip->only(['distance', 'destination_address', 'price']);
         $data = array_merge($data, $extraData);
 
-        $this->saveDataWithoutAuthentication($path, $data);
+        $this->saveData($path, $data);
 
         return $this->showOne($requestShip, 201);
     }
