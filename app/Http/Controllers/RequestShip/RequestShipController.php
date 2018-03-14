@@ -44,7 +44,8 @@ class RequestShipController extends ApiController
      *      ),
      *     @SWG\Response(
      *          response="default",
-     *          description="error"
+     *          description="error",
+     *          @SWG\Schema(ref="#/definitions/Error")
      *   )
      * ),
      */
@@ -123,6 +124,7 @@ class RequestShipController extends ApiController
      *     @SWG\Response(
      *          response="default",
      *          description="error",
+     *          @SWG\Schema(ref="#/definitions/Error")
      *   )
      * ),
      */

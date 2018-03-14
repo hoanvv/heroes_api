@@ -18,21 +18,37 @@ class TripController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    /**
+     * @SWG\Post(
+     *     path="/trips",
+     *     tags={"Trips"},
+     *     summary="Choose a request ship for delivering",
+     *     @SWG\Parameter(
+     * 			name="id",
+     * 			in="body",
+     *          schema={"$ref": "#/definitions/NewTrip"},
+     * 			required=true,
+     * 			type="integer",
+     * 			description="ID",
+     * 		),
+     *     @SWG\Response(
+     *          response=201,
+     *          description="A newly-created trip",
+     *          @SWG\Schema(ref="#/definitions/Trip")
+     *      ),
+     *     @SWG\Response(
+     *          response="default",
+     *          description="error",
+     *          @SWG\Schema(ref="#/definitions/Error")
+     *   )
+     * ),
+     */
+
     public function store(Request $request)
     {
         //
@@ -45,17 +61,6 @@ class TripController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
     {
         //
     }
