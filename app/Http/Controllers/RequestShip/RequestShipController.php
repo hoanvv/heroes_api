@@ -93,6 +93,9 @@ class RequestShipController extends ApiController
         $extraData = $requestShip->only(['distance', 'destination_address', 'price', 'id']);
         $data = array_merge($data, $extraData);
 
+        $status = ['status' => $requestTracking->status];
+        $data = array_push($data, $status);
+
         $this->saveData($path, $data);
 
         return $this->showOne($requestShip, 201);
