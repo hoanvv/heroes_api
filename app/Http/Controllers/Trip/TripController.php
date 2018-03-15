@@ -114,7 +114,10 @@ class TripController extends ApiController
      */
     public function show($id)
     {
-        //
+        $path = "package/shipper";
+        $dd = $this->retrieveData($path);
+        dd($dd);
+
     }
 
     /**

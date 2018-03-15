@@ -11,7 +11,7 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Entities\User::class, 50)->create()->each(function ($user) {
+        factory(App\Entities\User::class, 100)->create()->each(function ($user) {
             switch ($user->role_id) {
                 case 2:
                     $user->shipper()->save(factory(App\Entities\Shipper::class)->make([
