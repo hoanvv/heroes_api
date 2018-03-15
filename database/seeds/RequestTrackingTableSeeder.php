@@ -34,7 +34,7 @@ class RequestTrackingTableSeeder extends Seeder
 
             $pickup_location = $requestShip->only('pickup_location');
             $data = json_decode($pickup_location['pickup_location'], true);
-            $extraData = $requestShip->only(['distance', 'destination_address', 'price']);
+            $extraData = $requestShip->only(['distance', 'destination_address', 'price', 'id']);
             $data1 = array_merge($data, $extraData);
 
             $this->saveData($path, $data1);

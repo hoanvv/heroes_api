@@ -10,9 +10,8 @@ class RequestTracking extends Model
     const WAITING_REQUEST = 1;
     const ACCEPTED_REQUEST = 2;
     const CANCELLED_TRIP = 3;
-    const WAITING_TRIP = 4;
-    const DELIVERING_TRIP = 5;
-    const COMPLETED_TRIP = 6;
+    const DELIVERING_TRIP = 4;
+    const COMPLETED_TRIP = 5;
 
     protected $fillable = [
         'request_ship_id',
@@ -24,37 +23,32 @@ class RequestTracking extends Model
     // Method for getting status
     public function isCancelledRequest()
     {
-        return $this->status == RequestShip::CANCELLED_REQUEST;
+        return $this->status == RequestTracking::CANCELLED_REQUEST;
     }
 
     public function isWaitingRequest()
     {
-        return $this->status == RequestShip::WAITING_REQUEST;
+        return $this->status == RequestTracking::WAITING_REQUEST;
     }
 
     public function isAcceptedRequest()
     {
-        return $this->status == RequestShip::ACCEPTED_REQUEST;
+        return $this->status == RequestTracking::ACCEPTED_REQUEST;
     }
 
     public function isCancelledTrip()
     {
-        return $this->status == RequestShip::CANCELLED_TRIP;
-    }
-
-    public function isWaitingTrip()
-    {
-        return $this->status == RequestShip::WAITING_TRIP;
+        return $this->status == RequestTracking::CANCELLED_TRIP;
     }
 
     public function isDeliveringTrip()
     {
-        return $this->status == RequestShip::DELIVERING_TRIP;
+        return $this->status == RequestTracking::DELIVERING_TRIP;
     }
 
     public function isCompletedTrip()
     {
-        return $this->status == RequestShip::COMPLETED_TRIP;
+        return $this->status == RequestTracking::COMPLETED_TRIP;
     }
 
     // Relationships
