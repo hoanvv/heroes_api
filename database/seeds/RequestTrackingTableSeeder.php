@@ -28,16 +28,20 @@ class RequestTrackingTableSeeder extends Seeder
             $temp['changed_at'] = $requestShip->created_at;
 
             array_push($records, $temp);
-            unset($temp);
             // Insert data for request package into firebase
             $path = "package/available/{$requestShip->id}";
 
             $pickup_location = $requestShip->only('pickup_location');
             $data = json_decode($pickup_location['pickup_location'], true);
             $extraData = $requestShip->only(['distance', 'destination_address', 'price', 'id']);
-            $data1 = array_merge($data, $extraData);
+            $data = array_merge($data, $extraData);
 
-            $this->saveData($path, $data1);
+            $status = ['status' => $temp['status']];
+            $data = array_merge($data, $status);
+
+            $this->saveData($path, $data);
+            unset($temp);
+            unset($data);
         }
 
         $this->insertIgnoreRecords('request_trackings', $records);

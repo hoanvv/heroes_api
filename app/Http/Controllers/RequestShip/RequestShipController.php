@@ -24,19 +24,26 @@ class RequestShipController extends ApiController
 
         return $this->showAll($requestShips);
     }
+
+    /**
+     * Register the package
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     /**
      * @SWG\Post(
      *     path="/requestShips",
      *     tags={"Request Ship"},
      *     summary="Create new request ship",
      *     @SWG\Parameter(
-     * 			name="id",
-     * 			in="body",
+     *            name="id",
+     *            in="body",
      *          schema={"$ref": "#/definitions/NewRequestShip"},
-     * 			required=true,
-     * 			type="integer",
-     * 			description="ID",
-     * 		),
+     *            required=true,
+     *            type="integer",
+     *            description="ID",
+     *        ),
      *     @SWG\Response(
      *          response=201,
      *          description="A newly-created request ship",
@@ -92,6 +99,9 @@ class RequestShipController extends ApiController
         $data = json_decode($pickup_location['pickup_location'], true);
         $extraData = $requestShip->only(['distance', 'destination_address', 'price', 'id']);
         $data = array_merge($data, $extraData);
+
+        $status = ['status' => $requestTracking->status];
+        $data = array_merge($data, $status);
 
         $this->saveData($path, $data);
 
