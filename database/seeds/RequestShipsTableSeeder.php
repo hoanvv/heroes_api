@@ -63,7 +63,7 @@ class RequestShipsTableSeeder extends Seeder
                 "price" => 15000.00,
                 "distance" => 3.00,
                 "duration" => 600,
-                "size" => "{\"length\": 30, \"width\": 30, \"height\": 45]",
+                "size" => "{\"length\": 30, \"width\": 30, \"height\": 45}",
                 "note" => "Nghi de thuiong",
                 "created_at" => \Carbon\Carbon::now(),
                 "pickup_location_address" => "69-47 Hoàng Diệu, Hải Châu, Đà Nẵng, Vietnam",

@@ -87,6 +87,8 @@ class TripController extends ApiController
         $availablePackage = $this->retrieveData($path);
         $availablePackage['status'] = $status;
 
+        $availablePackage['status'] = $status;
+
         // Remove this request ship from package/available/{$requestShipId}
         $this->deleteData($path);
 
