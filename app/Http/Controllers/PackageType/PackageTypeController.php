@@ -19,6 +19,7 @@ class PackageTypeController extends ApiController
     {
         $optionPackages = PackageType::where('optional_package', PackageType::NORMAL_PACKAGE)
             ->get();
+
         $otherPackage = collect([
             "id" => 0,
             "name" => "Others",

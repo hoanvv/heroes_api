@@ -101,6 +101,7 @@ class RequestShipController extends ApiController
         $data = array_merge($data, $extraData);
 
         $status = ['status' => $requestTracking->status];
+
         $data = array_merge($data, $status);
 
         $this->saveData($path, $data);
