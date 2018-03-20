@@ -13,6 +13,7 @@ use Illuminate\Validation\ValidationException;
 
 use App\Traits\ApiResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
 class Handler extends ExceptionHandler
@@ -76,6 +77,9 @@ class Handler extends ExceptionHandler
             return $this->unauthenticated($request, $exception);
         }
 
+        if ($exception instanceof UnauthorizedHttpException) {
+            return $this->errorResponse($exception->getMessage(), 401);
+        }
         if ($exception instanceof AuthorizationException) {
             return $this->errorResponse($exception->getMessage(), 403);
         }
