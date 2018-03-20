@@ -9,7 +9,7 @@ class RequestTracking extends Model
     const CANCELLED_REQUEST = 0;
     const WAITING_REQUEST = 1;
     const ACCEPTED_REQUEST = 2;
-    const CANCELLED_TRIP = 3;
+    const CONFIRMED_TRIP = 3;
     const DELIVERING_TRIP = 4;
     const COMPLETED_TRIP = 5;
 
@@ -36,9 +36,9 @@ class RequestTracking extends Model
         return $this->status == RequestTracking::ACCEPTED_REQUEST;
     }
 
-    public function isCancelledTrip()
+    public function isConfirmedTrip()
     {
-        return $this->status == RequestTracking::CANCELLED_TRIP;
+        return $this->status == RequestTracking::CONFIRMED_TRIP;
     }
 
     public function isDeliveringTrip()
