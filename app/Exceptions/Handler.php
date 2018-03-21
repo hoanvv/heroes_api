@@ -15,6 +15,8 @@ use App\Traits\ApiResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
 class Handler extends ExceptionHandler
 {
@@ -102,6 +104,12 @@ class Handler extends ExceptionHandler
             if ($errorCode == 1451) {
                 return $this->errorResponse('Cannot remove this resource permanently. It is related with any other resource', 409);
             }
+        }
+
+        if ($exception instanceof TokenExpiredException) {
+            return response()->json(['token_expired'], $exception->getStatusCode());
+        } else if ($exception instanceof TokenInvalidException) {
+            return response()->json(['token_invalid'], $exception->getStatusCode());
         }
 
         if (config('app.debug')) {

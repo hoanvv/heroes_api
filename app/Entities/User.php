@@ -18,6 +18,10 @@ class User extends Authenticatable implements JWTSubject
 
     const DEFAULT_RATING = 5.0;
 
+    const ADMIN_ID = 1;
+    const SHIPPER_ID = 2;
+    const PO_ID = 3;
+
     protected $fillable = [
         'first_name',
         'last_name',
@@ -44,6 +48,21 @@ class User extends Authenticatable implements JWTSubject
     public function isBlocked()
     {
         return $this->blocked == User::BLOCKED_USER;
+    }
+
+    public function isAdmin()
+    {
+        return $this->role_id == User::ADMIN_ID;
+    }
+
+    public function isShipper()
+    {
+        return $this->role_id == User::SHIPPER_ID;
+    }
+
+    public function isPackageOwner()
+    {
+        return $this->role_id == User::PO_ID;
     }
 
     // Relationships
