@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
+use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use JWTAuth;
 
@@ -36,7 +37,13 @@ class AuthController extends ApiController
             return response()->json(['success' => false, 'error' => 'Failed to login, please try again.'], 500);
         }
         // all good so return the token
-        return response()->json(['success' => true, 'data'=> [ 'token' => $token ]]);
+        $user = Auth::user();
+        $userId = $user->id;
+        $fullName = $user->first_name . ' ' . $user->last_name;
+
+        $data = [ 'token' => $token, 'user_id' => $userId, 'full_name' => $fullName ];
+
+        return response()->json(['success' => true, 'data'=> $data]);
     }
 
     public function logout(Request $request) {
