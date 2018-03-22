@@ -137,6 +137,8 @@ class RequestShip extends Model
         'duration',
         'size',
         'note',
+        'po_verification_code',
+        'receiver_verification_code'
     ];
 
     // Relationship

@@ -31,6 +31,9 @@ class CreateRequestShipsTable extends Migration
             $table->integer('duration');
             $table->string('size')->nullable();
             $table->text('note')->nullable();
+            $table->string('po_verification_code')->nullable();
+            $table->string('receiver_verification_code')->nullable();
+            $table->string('verification_qr')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');

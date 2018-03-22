@@ -4,24 +4,24 @@ namespace App\Traits;
 
 trait SMSTrait
 {
-    protected function sendNormalSMS($phoneNumber, $message)
-    {
-        $sid = "AC4a3cc712d39d67b557094d120e423d72";
-        $token = "0ef10217b31a49f4449e8d219b7cd71b";
-        $client = new Client($sid, $token);
-
-        try {
-            $client->messages->create(
-                $phoneNumber,
-                array(
-                    'from' => '+17162654424',
-                    'body' => $message
-                )
-            );
-        } catch (Exception $e) {
-            //Log::error($e->getMessage());
-        }
-    }
+//    protected function sendNormalSMS($phoneNumber, $message)
+//    {
+//        $sid = "AC4a3cc712d39d67b557094d120e423d72";
+//        $token = "0ef10217b31a49f4449e8d219b7cd71b";
+//        $client = new Client($sid, $token);
+//
+//        try {
+//            $client->messages->create(
+//                $phoneNumber,
+//                array(
+//                    'from' => '+17162654424',
+//                    'body' => $message
+//                )
+//            );
+//        } catch (Exception $e) {
+//            //Log::error($e->getMessage());
+//        }
+//    }
 
     protected function sendVerifySMS($phoneNumber)
     {
@@ -32,6 +32,7 @@ trait SMSTrait
             . "&via=sms"
             . "&country_code=84"
             . "&phone_number={$phoneNumber}";
+
         $isPost = true;
 
         $response = $this->curlRequest($isPost, $url);

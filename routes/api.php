@@ -23,7 +23,8 @@ Route::group(['middleware' => ['jwt.auth']], function() {
 Route::group(['middleware' => ['jwt.auth', 'role:shipper']], function() {
     // Request Ship
     Route::post('shipper/trip', 'Shipper\ShipperTripController@store');
-
+    Route::put('shipper/trip/{requestShipId}', 'Shipper\ShipperTripController@update');
+    Route::put('packageOwner/trip/{requestShipId}', 'PackageOwner\PackageOwnerTripController@update');
 });
 
 Route::group(['middleware' => ['jwt.auth', 'role:packageOwner']], function() {
@@ -32,3 +33,5 @@ Route::group(['middleware' => ['jwt.auth', 'role:packageOwner']], function() {
 
 Route::get('/sendSMS/{phoneNumber}', 'SMSController@index');
 Route::get('/verifyCode/{phoneNumber}/{verificationCode}', 'SMSController@verifyCode');
+
+Route::get('/qrcode', 'SMSController@createQR');
