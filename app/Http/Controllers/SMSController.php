@@ -6,6 +6,7 @@ use App\Traits\SMSTrait;
 use Illuminate\Http\Request;
 use QrCode;
 use Illuminate\Support\Facades\Storage;
+use Services_Twilio;
 
 class SMSController extends Controller
 {
@@ -13,8 +14,25 @@ class SMSController extends Controller
 
     public function index($phoneNumber)
     {
-        $rs = $this->sendVerifySMS($phoneNumber);
-        echo $rs;
+//        $rs = $this->sendVerifySMS($phoneNumber);
+//        echo $rs;
+        $accountId = 'AC4a3cc712d39d67b557094d120e423d72';
+        $token = '0ef10217b31a49f4449e8d219b7cd71b';
+        $fromNumber = '+17162654424';
+        $number = '+84984617351';
+        $message = 'Pink Elephants and Happy Rainbows';
+//        $twilio = new Aloha\Twilio\Twilio($accountId, $token, $fromNumber);
+//        $twilio = new Twilio($accountId, $token, $fromNumber);
+        $twilio = new Services_Twilio($accountId, $token);
+
+//        $twilio->message('+84984617351', 'Pink Elephants and Happy Rainbows');
+        $sb = $twilio->account->messages->sendMessage(
+            $fromNumber, // the text will be sent from your Twilio number
+            $number, // the phone number the text will be sent to
+            $message // the body of the text message
+        );
+
+        echo $sb;
     }
 
     public function verifyCode($phoneNumber, $verificationCode)

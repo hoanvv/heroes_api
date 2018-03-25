@@ -152,6 +152,7 @@ return [
          */
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
+        Aloha\Twilio\Support\Laravel\ServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -211,6 +212,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
+        'Twilio' => 'Aloha\Twilio\Support\Laravel\Facade',
 
     ],
 

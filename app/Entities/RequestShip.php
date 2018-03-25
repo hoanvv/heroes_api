@@ -122,6 +122,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class RequestShip extends Model
 {
+    const UNVERIFIED_PO_CODE = 0;
+    const VERIFIED_PO_CODE = 1;
+    const UNVERIFIED_RECEIVER_CODE = 0;
+    const VERIFIED_RECEIVER_CODE = 1;
+    const UNVERIFIED_OTP = 0;
+    const VERIFIED_OTP = 1;
+
     protected $fillable = [
         'user_id',
         'package_type_id',
@@ -138,9 +145,27 @@ class RequestShip extends Model
         'size',
         'note',
         'po_verification_code',
-        'receiver_verification_code'
+        'verified_po_code',
+        'receiver_verification_code',
+        'verified_receiver_code',
+        'verified_otp'
     ];
 
+    // Utility function
+    public function isVerifiedPOCode()
+    {
+        return $this->verified_po_code == RequestShip::VERIFIED_PO_CODE;
+    }
+
+    public function isVerifiedReceiverCode()
+    {
+        return $this->verified_receiver_code == RequestShip::VERIFIED_RECEIVER_CODE;
+    }
+
+    public function isVerifiedOTP()
+    {
+        return $this->verified_otp == RequestShip::VERIFIED_OTP;
+    }
     // Relationship
     public function packageType()
     {
@@ -167,4 +192,13 @@ class RequestShip extends Model
         return $this->hasMany('App\Entities\RequestTracking');
     }
 
+    public static function randomCode()
+    {
+        $code = '';
+        for ($i = 0; $i<4; $i++)
+        {
+            $code .= mt_rand(0,9);
+        }
+        return $code;
+    }
 }

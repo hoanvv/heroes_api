@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Entities\RequestShip;
 
 class RequestShipsTableSeeder extends Seeder
 {
@@ -31,7 +32,9 @@ class RequestShipsTableSeeder extends Seeder
                 "note" => "Hoan dep trai",
                 "created_at" => \Carbon\Carbon::now(),
                 "pickup_location_address" => "27 Hoàng Diệu, Q. Hải Châu, Đà Nẵng, Vietnam",
-                "destination_address" => "Điện Biên Phủ, Thanh Khê, Đà Nẵng, Vietnam"
+                "destination_address" => "Điện Biên Phủ, Thanh Khê, Đà Nẵng, Vietnam",
+                "po_verification_code" => RequestShip::randomCode(),
+                "receiver_verification_code" => RequestShip::randomCode()
             ],
             [
                 "id" => 2,
@@ -49,7 +52,9 @@ class RequestShipsTableSeeder extends Seeder
                 "note" => "string",
                 "created_at" => \Carbon\Carbon::now(),
                 "pickup_location_address" => "59/19 Núi Thành, Hòa Thuận Đông, Q. Hải Châu, Đà Nẵng, Vietnam",
-                "destination_address" => "907 Đương Nguyễn Tất Thành, Xuân Hà, Thanh Khê, Đà Nẵng, Vietnam"
+                "destination_address" => "907 Đương Nguyễn Tất Thành, Xuân Hà, Thanh Khê, Đà Nẵng, Vietnam",
+                "po_verification_code" => RequestShip::randomCode(),
+                "receiver_verification_code" => RequestShip::randomCode()
             ],
             [
                 "id" => 3,
@@ -67,7 +72,9 @@ class RequestShipsTableSeeder extends Seeder
                 "note" => "Nghi de thuiong",
                 "created_at" => \Carbon\Carbon::now(),
                 "pickup_location_address" => "69-47 Hoàng Diệu, Hải Châu, Đà Nẵng, Vietnam",
-                "destination_address" => "907 Đương Nguyễn Tất Thành, Xuân Hà, Thanh Khê, Đà Nẵng, Vietnam"
+                "destination_address" => "907 Đương Nguyễn Tất Thành, Xuân Hà, Thanh Khê, Đà Nẵng, Vietnam",
+                "po_verification_code" => RequestShip::randomCode(),
+                "receiver_verification_code" => RequestShip::randomCode()
             ],
             [
                 "id" => 4,
@@ -85,7 +92,9 @@ class RequestShipsTableSeeder extends Seeder
                 "note" => "string",
                 "created_at" => \Carbon\Carbon::now(),
                 "pickup_location_address" => "538-540 QL14B, An Hải Tây, Sơn Trà, Đà Nẵng, Vietnam",
-                "destination_address" => "203-179 Ông Ích Khiêm, Hải Châu, Đà Nẵng, Vietnam"
+                "destination_address" => "203-179 Ông Ích Khiêm, Hải Châu, Đà Nẵng, Vietnam",
+                "po_verification_code" => RequestShip::randomCode(),
+                "receiver_verification_code" => RequestShip::randomCode()
             ],
             [
                 "id" => 5,
@@ -103,7 +112,9 @@ class RequestShipsTableSeeder extends Seeder
                 "note" => "string",
                 "created_at" => \Carbon\Carbon::now(),
                 "pickup_location_address" => "538-540 QL14B, An Hải Tây, Sơn Trà, Đà Nẵng, Vietnam",
-                "destination_address" => "203-179 Ông Ích Khiêm, Hải Châu, Đà Nẵng, Vietnam"
+                "destination_address" => "203-179 Ông Ích Khiêm, Hải Châu, Đà Nẵng, Vietnam",
+                "po_verification_code" => RequestShip::randomCode(),
+                "receiver_verification_code" => RequestShip::randomCode()
             ],
             [
                 "id" => 6,
@@ -121,7 +132,9 @@ class RequestShipsTableSeeder extends Seeder
                 "note" => "string",
                 "created_at" => \Carbon\Carbon::now(),
                 "pickup_location_address" => "10 Duy Tân",
-                "destination_address" => "80 Nguyễn Văn Linh"
+                "destination_address" => "80 Nguyễn Văn Linh",
+                "po_verification_code" => RequestShip::randomCode(),
+                "receiver_verification_code" => RequestShip::randomCode()
             ],
             [
                 "id" => 7,
@@ -139,7 +152,9 @@ class RequestShipsTableSeeder extends Seeder
                 "note" => "string",
                 "created_at" => \Carbon\Carbon::now(),
                 "pickup_location_address" => "10 Duy Tân",
-                "destination_address" => "80 Núi Thành"
+                "destination_address" => "80 Núi Thành",
+                "po_verification_code" => RequestShip::randomCode(),
+                "receiver_verification_code" => RequestShip::randomCode()
             ],
             [
                 "id" => 10,
@@ -157,7 +172,9 @@ class RequestShipsTableSeeder extends Seeder
                 "note" => "string",
                 "created_at" => \Carbon\Carbon::now(),
                 "pickup_location_address" => "10 Duy Tân",
-                "destination_address" => "80 Núi Thành"
+                "destination_address" => "80 Núi Thành",
+                "po_verification_code" => RequestShip::randomCode(),
+                "receiver_verification_code" => RequestShip::randomCode()
             ],
         ];
 

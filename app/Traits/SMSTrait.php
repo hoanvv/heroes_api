@@ -1,27 +1,26 @@
 <?php
 
 namespace App\Traits;
+use Services_Twilio;
 
 trait SMSTrait
 {
-//    protected function sendNormalSMS($phoneNumber, $message)
-//    {
-//        $sid = "AC4a3cc712d39d67b557094d120e423d72";
-//        $token = "0ef10217b31a49f4449e8d219b7cd71b";
-//        $client = new Client($sid, $token);
-//
-//        try {
-//            $client->messages->create(
-//                $phoneNumber,
-//                array(
-//                    'from' => '+17162654424',
-//                    'body' => $message
-//                )
-//            );
-//        } catch (Exception $e) {
-//            //Log::error($e->getMessage());
-//        }
-//    }
+    protected function sendNormalSMS($phoneNumber, $message)
+    {
+        $accountId = 'AC4a3cc712d39d67b557094d120e423d72';
+        $token = '0ef10217b31a49f4449e8d219b7cd71b';
+        $fromNumber = '+17162654424';
+
+        $twilio = new Services_Twilio($accountId, $token);
+
+        $sb = $twilio->account->messages->sendMessage(
+            $fromNumber, // the text will be sent from your Twilio number
+            $phoneNumber, // the phone number the text will be sent to
+            $message // the body of the text message
+        );
+
+        echo $sb;
+    }
 
     protected function sendVerifySMS($phoneNumber)
     {
