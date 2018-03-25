@@ -9,9 +9,9 @@ class RequestTracking extends Model
     const CANCELLED_REQUEST = 0;
     const WAITING_REQUEST = 1;
     const ACCEPTED_REQUEST = 2;
-    const CONFIRMED_TRIP = 3;
-    const DELIVERING_TRIP = 4;
-    const COMPLETED_TRIP = 5;
+//    const CONFIRMED_TRIP = 3;
+    const DELIVERING_TRIP = 3;
+    const COMPLETED_TRIP = 4;
 
     protected $fillable = [
         'request_ship_id',
@@ -36,10 +36,10 @@ class RequestTracking extends Model
         return $this->status == RequestTracking::ACCEPTED_REQUEST;
     }
 
-    public function isConfirmedTrip()
-    {
-        return $this->status == RequestTracking::CONFIRMED_TRIP;
-    }
+//    public function isConfirmedTrip()
+//    {
+//        return $this->status == RequestTracking::CONFIRMED_TRIP;
+//    }
 
     public function isDeliveringTrip()
     {

@@ -20,7 +20,7 @@ class PackageOwnerTripController extends ApiController
     public function update(Request $request, $requestShipId)
     {
         $rules = [
-            'verification_code' => 'required|string',
+            'otp_code' => 'required|string',
         ];
 
         $this->validate($request, $rules);
@@ -30,30 +30,46 @@ class PackageOwnerTripController extends ApiController
         $requestShip = RequestShip::findOrFail($requestShipId);
         $requestShipOwner = $requestShip->user()->first();
 
+        // Check verified package owner code before verifying OTP code
+        if (!$requestShip->isVerifiedPOCode()) {
+            $message = array(
+                'success' => false,
+                'message' => "Please verify package owner code before verifying OTP code",
+                'code' => 403
+            );
+            return response()->json($message, 403);
+        }
+
         // Verify code sent
-        $response = $this->verifyCodeSent($requestShipOwner->phone, $data['verification_code']);
+        $response = $this->verifyCodeSent($requestShipOwner->phone, $data['otp_code']);
         $responseObject = json_decode($response);
         if (!$responseObject->success) {
             $message = array(
                 'success' => false,
                 'message' => $responseObject->message,
-                'code' => 401
+                'code' => 403
             );
-            return response()->json($message, 401);
+            return response()->json($message, 403);
         }
 
         // Send verification code to receiver
         $receiverPhone = $requestShip->receiver_phone;
-        $response = $this->sendVerifySMS($receiverPhone);
+        $receiverCode = $requestShip->receiver_verification_code;
+
+        $response = $this->sendNormalSMS($receiverPhone, $receiverCode);
         $responseObject = json_decode($response);
         if (!$responseObject->success) {
             $message = array(
                 'success' => false,
                 'message' => $responseObject->message,
-                'code' => 500
+                'code' => $responseObject->code
             );
-            return response()->json($message, 500);
+            return response()->json($message, $responseObject->code);
         }
+
+        // Update status of OTP code
+        $requestShip->otp_code = RequestShip::VERIFIED_OTP;
+        $requestShip->save();
 
         // Prepare data for request tracking before insert
         $status = RequestTracking::DELIVERING_TRIP;
@@ -63,13 +79,13 @@ class PackageOwnerTripController extends ApiController
         $path = "package/package-owner/{$requestShipOwner->id}/{$requestShip->id}/status";
         $this->saveData($path, $status);
 
-        $shipperId = Auth::user()->id;
+        $shipperId = $requestShip->trip()->first()->shipper_id;
         $path = "package/shipper/{$shipperId}/{$requestShip->id}/status";
         $this->saveData($path, $status);
 
         $message = array(
             'success' => true,
-            'message' => 'The request ship was confirmed by package owner successfully',
+            'message' => 'The request ship was confirmed by yourself successfully',
             'code' => 200
         );
         return response()->json($message, 200);

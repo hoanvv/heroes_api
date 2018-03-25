@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Traits;
-use Services_Twilio;
+use Twilio\Rest\Client;
+use Twilio\Exceptions\TwilioException;
 
 trait SMSTrait
 {
@@ -10,16 +11,38 @@ trait SMSTrait
         $accountId = 'AC4a3cc712d39d67b557094d120e423d72';
         $token = '0ef10217b31a49f4449e8d219b7cd71b';
         $fromNumber = '+17162654424';
+        $phone = '+84' . $phoneNumber;
 
-        $twilio = new Services_Twilio($accountId, $token);
+        $client = new Client($accountId, $token);
 
-        $sb = $twilio->account->messages->sendMessage(
-            $fromNumber, // the text will be sent from your Twilio number
-            $phoneNumber, // the phone number the text will be sent to
-            $message // the body of the text message
+        // Use the client to do fun stuff like send text messages!
+        try {
+            $res = $client->messages->create(
+            // the number you'd like to send the message to
+                $phone,
+                array(
+                    // A Twilio phone number you purchased at twilio.com/console
+                    'from' => $fromNumber,
+                    // the body of the text message you'd like to send
+                    'body' => $message
+                )
+            );
+        } catch (TwilioException $e) {
+            $statusCode = $e->getStatusCode();
+            $message = array(
+                'success' => false,
+                'message' => $e->getMessage(),
+                'code' => $statusCode
+            );
+            return json_encode($message);
+        }
+
+        $message = array(
+            'success' => true,
+            'message' => "This message is sent successfully",
+            'code' => 200
         );
-
-        echo $sb;
+        return json_encode($message);
     }
 
     protected function sendVerifySMS($phoneNumber)

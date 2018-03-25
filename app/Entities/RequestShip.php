@@ -182,7 +182,7 @@ class RequestShip extends Model
         return $this->belongsTo('App\Entities\User');
     }
 
-    public function trips()
+    public function trip()
     {
         return $this->hasOne('App\Entities\Trip');
     }

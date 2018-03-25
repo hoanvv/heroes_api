@@ -86,7 +86,7 @@ class RequestShipsTableSeeder extends Seeder
                 "pickup_location" => "{\"latitude\":16.066697, \"longitude\":108.232925}",
                 "destination" => "{\"latitude\":16.071524, \"longitude\":108.213193}",
                 "price" => 20000.00,
-                "distance" => 0.00,
+                "distance" => 4.00,
                 "duration" => 880,
                 "size" => "{\"length\": 15, \"width\": 20, \"height\": 15}",
                 "note" => "string",

@@ -56,7 +56,7 @@ class ShipperTripController extends ApiController
     public function store(Request $request)
     {
         $rules = [
-            'request_ship_id' => 'required|integer',
+            'request_ship_id' => 'required|integer'
         ];
 
         $this->validate($request, $rules);
@@ -104,8 +104,6 @@ class ShipperTripController extends ApiController
             $json_array = json_decode($item, true);
             array_push($arrayTemp, $json_array);
         }
-        // Send verification code
-        $this->sendVerifySMS($packageOwnerPhone);
 
         return response()->json(['data' => $arrayTemp], 200);
 
@@ -114,7 +112,7 @@ class ShipperTripController extends ApiController
     public function update(Request $request, $requestShipId)
     {
         $rules = [
-            'verification_code' => 'required|string',
+            'po_verification_code' => 'required|string',
         ];
 
         $this->validate($request, $rules);
@@ -124,36 +122,50 @@ class ShipperTripController extends ApiController
         $requestShip = RequestShip::findOrFail($requestShipId);
         $requestShipOwner = $requestShip->user()->first();
 
-        // Verify code sent
-        $response = $this->verifyCodeSent($requestShipOwner->phone, $data['verification_code']);
-        $responseObject = json_decode($response);
-        if (!$responseObject->success) {
+        // Check verified package owner code before verifying OTP code
+        if ($requestShip->isVerifiedPOCode()) {
             $message = array(
                 'success' => false,
-                'message' => $responseObject->message,
-                'code' => 401
+                'message' => "This code was verified",
+                'code' => 403
             );
-            return response()->json($message, 401);
+            return response()->json($message, 403);
         }
 
-        // Prepare data for request tracking before insert
-        $status = RequestTracking::COMPLETED_TRIP;
-        $this->updateRequestTracking($requestShipOwner->id, $requestShip->id, $status);
+        // Verify code sent
+        if ($requestShip['po_verification_code'] != $data['po_verification_code']) {
+            $message = array(
+                'success' => false,
+                'message' => "Package owner verification code didnt match",
+                'code' => 401
+            );
+            $status = 401;
+        } else {
+            // Send OTP code to package owner
+            $PoPhone = $requestShipOwner->phone;
+            $response = $this->sendVerifySMS($PoPhone);
+            $responseObject = json_decode($response);
+            if (!$responseObject->success) {
+                $message = array(
+                    'success' => false,
+                    'message' => $responseObject->message,
+                    'code' => 403
+                );
+                return response()->json($message, 403);
+            }
 
-        // Update request ship status on firebase
-        $path = "package/package-owner/{$requestShipOwner->id}/{$requestShip->id}/status";
-        $this->saveData($path, $status);
+            // Update status of po verification code
+            $requestShip->verified_po_code = RequestShip::VERIFIED_PO_CODE;
+            $requestShip->save();
 
-        $shipperId = Auth::user()->id;
-        $path = "package/shipper/{$shipperId}/{$requestShip->id}/status";
-        $this->saveData($path, $status);
+            $message = array(
+                'success' => true,
+                'message' => 'Package owner verification code was verified',
+                'code' => 200
+            );
+            $status = 200;
 
-        $message = array(
-            'success' => true,
-            'message' => 'The request ship was confirmed that was delivered successfully',
-            'code' => 200
-        );
-
-        return response()->json($message, 200);
+        }
+        return response()->json($message, $status);
     }
 }

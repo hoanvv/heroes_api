@@ -6,7 +6,8 @@ use App\Traits\SMSTrait;
 use Illuminate\Http\Request;
 use QrCode;
 use Illuminate\Support\Facades\Storage;
-use Services_Twilio;
+use Twilio\Rest\Client;
+use Twilio\Exceptions\RestException;
 
 class SMSController extends Controller
 {
@@ -14,25 +15,46 @@ class SMSController extends Controller
 
     public function index($phoneNumber)
     {
-//        $rs = $this->sendVerifySMS($phoneNumber);
-//        echo $rs;
-        $accountId = 'AC4a3cc712d39d67b557094d120e423d72';
-        $token = '0ef10217b31a49f4449e8d219b7cd71b';
-        $fromNumber = '+17162654424';
-        $number = '+84984617351';
-        $message = 'Pink Elephants and Happy Rainbows';
-//        $twilio = new Aloha\Twilio\Twilio($accountId, $token, $fromNumber);
-//        $twilio = new Twilio($accountId, $token, $fromNumber);
-        $twilio = new Services_Twilio($accountId, $token);
-
-//        $twilio->message('+84984617351', 'Pink Elephants and Happy Rainbows');
-        $sb = $twilio->account->messages->sendMessage(
-            $fromNumber, // the text will be sent from your Twilio number
-            $number, // the phone number the text will be sent to
-            $message // the body of the text message
-        );
-
-        echo $sb;
+        return $this->sendVerifySMS('+84935013834');
+        $response = $this->sendNormalSMS("0984617351", "Hoan Dep Trai");
+        $responseObject = json_decode($response);
+        dd($responseObject->message);
+//        $accountId = 'AC4a3cc712d39d67b557094d120e423d72';
+//        $token = '0ef10217b31a49f4449e8d219b7cd71b';
+//        $fromNumber = '+17162654424';
+//        $number = '+840984617351';
+//
+//        $client = new Client($accountId, $token);
+//
+//        // Use the client to do fun stuff like send text messages!
+//        try {
+//            $sb = $client->messages->create(
+//            // the number you'd like to send the message to
+//                $number,
+//                array(
+//                    // A Twilio phone number you purchased at twilio.com/console
+//                    'from' => $fromNumber,
+//                    // the body of the text message you'd like to send
+//                    'body' => 'Hey Jenny! Good luck on the bar exam!'
+//                )
+//            );
+//        } catch (RestException $e) {
+//            $statusCode = $e->getStatusCode();
+//            $message = array(
+//                'success' => false,
+//                'message' => $e->getMessage(),
+//                'code' => $statusCode
+//            );
+//            return response()->json($message, $statusCode);
+//
+//        }
+//
+//        $message = array(
+//            'success' => true,
+//            'message' => "This message is sent successfully",
+//            'code' => 200
+//        );
+//        return response()->json($message, 200);
     }
 
     public function verifyCode($phoneNumber, $verificationCode)
