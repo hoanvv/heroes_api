@@ -9,7 +9,6 @@ class RequestTracking extends Model
     const CANCELLED_REQUEST = 0;
     const WAITING_REQUEST = 1;
     const ACCEPTED_REQUEST = 2;
-//    const CONFIRMED_TRIP = 3;
     const DELIVERING_TRIP = 3;
     const COMPLETED_TRIP = 4;
 
