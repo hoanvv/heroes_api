@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Shipper;
 
 use App\Entities\RequestShip;
 use App\Entities\RequestTracking;
+use App\Entities\Shipper;
 use App\Entities\Trip;
 use App\Http\Controllers\ApiController;
 use App\Traits\FirebaseConnection;
@@ -11,12 +12,21 @@ use App\Traits\SMSTrait;
 use App\Traits\UpdateRequestTracking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ShipperTripController extends ApiController
 {
     use UpdateRequestTracking;
     use FirebaseConnection;
     use SMSTrait;
+
+    public function index()
+    {
+        $shipperId = Auth::user()->id;
+        $data = Shipper::getRequestShipList($shipperId);
+        return response()->json(['data' => $data], 200);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -63,7 +73,7 @@ class ShipperTripController extends ApiController
 
         // Prepare data for trip before insert
         $tripData = $request->all();
-        $tripData['shipper_id'] = Auth::user()->id;
+        $tripData['shipper_id'] = Auth::user()->shipper()->first()->id;
 
         // Insert data for trip into database
         $trip = Trip::create($tripData);
@@ -107,6 +117,12 @@ class ShipperTripController extends ApiController
 
         return response()->json(['data' => $arrayTemp], 200);
 
+    }
+
+    public function show($id)
+    {
+        $da = Auth::user()->shipper()->first()->id;
+        dd($da);
     }
 
     public function update(Request $request, $requestShipId)
@@ -160,7 +176,7 @@ class ShipperTripController extends ApiController
 
             $message = array(
                 'success' => true,
-                'message' => 'Package owner verification code was verified',
+                'message' => 'Package owner verification code was verified. Please wait Package owner to confirm again.',
                 'code' => 200
             );
             $status = 200;

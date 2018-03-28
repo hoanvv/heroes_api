@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Shipper;
 
+use App\Entities\User;
+use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
-class ShipperController extends Controller
+class ShipperController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -14,50 +16,23 @@ class ShipperController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $baseShipper = Auth::user()->only([
+            'id',
+            'first_name',
+            'last_name',
+            'email',
+            'phone',
+        ]);
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+        $individualShipper = Auth::user()->shipper()->first()->only([
+            'rating',
+            'avatar',
+            'identity_card'
+        ]);
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        $shipper = array_merge($baseShipper, $individualShipper);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return response()->json(['data' => $shipper], 200);
     }
 
     /**
@@ -72,14 +47,4 @@ class ShipperController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

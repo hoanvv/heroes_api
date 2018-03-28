@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\PackageOwner;
 
+use App\Entities\PackageOwner;
 use App\Entities\RequestShip;
 use App\Entities\RequestTracking;
+use App\Entities\Trip;
 use App\Http\Controllers\ApiController;
 use App\Traits\FirebaseConnection;
 use App\Traits\SMSTrait;
@@ -16,6 +18,29 @@ class PackageOwnerTripController extends ApiController
     use UpdateRequestTracking;
     use SMSTrait;
     use FirebaseConnection;
+
+    public function index()
+    {
+        $userId = Auth::user()->id;
+        $data = PackageOwner::getRequestShipList($userId);
+        return response()->json(['data' => $data]);
+
+    }
+
+    public function show($id)
+    {
+        $userId = Auth::user()->id;
+        $trip = Trip::where('request_ship_id', $id)->first();
+
+        if ($trip === null) {
+            $data = PackageOwner::getRequestShip($userId, $id, false);
+        } else {
+            $data = PackageOwner::getRequestShip($userId, $id, true);
+        }
+
+        return response()->json(['data' => $data], 200);
+
+    }
 
     public function update(Request $request, $requestShipId)
     {
@@ -68,7 +93,7 @@ class PackageOwnerTripController extends ApiController
         }
 
         // Update status of OTP code
-        $requestShip->otp_code = RequestShip::VERIFIED_OTP;
+        $requestShip->verified_code = RequestShip::VERIFIED_OTP;
         $requestShip->save();
 
         // Prepare data for request tracking before insert
