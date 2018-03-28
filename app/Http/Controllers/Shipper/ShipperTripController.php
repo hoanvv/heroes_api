@@ -22,7 +22,7 @@ class ShipperTripController extends ApiController
 
     public function index()
     {
-        $shipperId = Auth::user()->id;
+       $shipperId = Auth::user()->shipper()->first()->id;
         $data = Shipper::getRequestShipList($shipperId);
         return response()->json(['data' => $data], 200);
     }
@@ -120,9 +120,11 @@ class ShipperTripController extends ApiController
     }
 
     public function show($id)
-    {
-        $da = Auth::user()->shipper()->first()->id;
-        dd($da);
+    
+        $shipperId = Auth::user()->shipper()->first()->id;
+        $data = Shipper::getRequestShip($shipperId, $id);
+
+        return response()->json(['data' => $data], 200);
     }
 
     public function update(Request $request, $requestShipId)
