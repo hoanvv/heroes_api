@@ -120,7 +120,7 @@ class ShipperTripController extends ApiController
     }
 
     public function show($id)
-    
+    {
         $shipperId = Auth::user()->shipper()->first()->id;
         $data = Shipper::getRequestShip($shipperId, $id);
 

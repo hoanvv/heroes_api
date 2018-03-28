@@ -15,7 +15,7 @@ class SMSController extends Controller
 
     public function index($phoneNumber)
     {
-        return $this->sendVerifySMS('+84935013834');
+        return $this->sendVerifySMS('+840984617351');
         $response = $this->sendNormalSMS("0984617351", "Hoan Dep Trai");
         $responseObject = json_decode($response);
         dd($responseObject->message);

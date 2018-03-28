@@ -93,7 +93,7 @@ class PackageOwnerTripController extends ApiController
         }
 
         // Update status of OTP code
-        $requestShip->verified_code = RequestShip::VERIFIED_OTP;
+        $requestShip->verified_otp = RequestShip::VERIFIED_OTP;
         $requestShip->save();
 
         // Prepare data for request tracking before insert
