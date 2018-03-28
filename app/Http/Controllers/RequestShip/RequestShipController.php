@@ -84,8 +84,8 @@ class RequestShipController extends ApiController
         $requestShipData['user_id'] = Auth::user()->id;
         $requestShipData['distance'] /= 1000;
 
-        $requestTrackingData['po_verification_code'] = RequestShip::randomCode();
-        $requestTrackingData['receiver_verification_code'] = RequestShip::randomCode();
+        $requestShipData['po_verification_code'] = RequestShip::randomCode();
+        $requestShipData['receiver_verification_code'] = RequestShip::randomCode();
         // Insert data for request ship into database
         $requestShip = RequestShip::create($requestShipData);
 
