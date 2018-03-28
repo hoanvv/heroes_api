@@ -47,7 +47,6 @@ class AuthController extends ApiController
         } else {
 
         }
-
         $data = [ 'token' => $token, 'user_id' => $userId, 'full_name' => $fullName, 'rating' => $rating];
 
         return response()->json(['success' => true, 'data'=> $data]);
