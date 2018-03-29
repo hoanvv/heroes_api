@@ -39,6 +39,7 @@ class AuthController extends ApiController
         // all good so return the token
         $user = Auth::user();
         $userId = $user->id;
+        $roleId = $user->role_id;
         $fullName = $user->first_name . ' ' . $user->last_name;
         $rating = 0;
         $shipper = [];
@@ -54,6 +55,7 @@ class AuthController extends ApiController
             'user_id' => $userId,
             'full_name' => $fullName,
             'rating' => $rating,
+            'role_id' => $roleId
         ];
         $data = array_merge($data, $shipper);
 
