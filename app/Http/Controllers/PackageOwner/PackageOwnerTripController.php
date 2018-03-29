@@ -107,6 +107,8 @@ class PackageOwnerTripController extends ApiController
         $shipperId = $requestShip->trip()->first()->shipper_id;
         $path = "package/shipper/{$shipperId}/{$requestShip->id}/status";
         $this->saveData($path, $status);
+        $path = "package/shipper/{$shipperId}/{$requestShip->id}/is_shown";
+        $this->saveData($path, 1);
 
         $message = array(
             'success' => true,

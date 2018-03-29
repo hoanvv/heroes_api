@@ -89,8 +89,6 @@ class ShipperTripController extends ApiController
         $availablePackage = $this->retrieveData($path);
         $availablePackage['status'] = $status;
 
-        $availablePackage['status'] = $status;
-
         // Remove this request ship from package/available/{$requestShipId}
         $this->deleteData($path);
 
@@ -104,6 +102,7 @@ class ShipperTripController extends ApiController
 
         $path = "package/package-owner/{$packageOwnerId}/{$requestShipId}";
         $availablePackage['shipper_id'] = $shipperId;
+        $availablePackage['is_shown'] = 1;
         $this->saveData($path, $availablePackage);
 
         // Return pickup location and destination for showing the route on map

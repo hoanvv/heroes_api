@@ -36,7 +36,10 @@ class RequestTrackingTableSeeder extends Seeder
             $extraData = $requestShip->only(['distance', 'destination_address', 'price', 'id']);
             $data = array_merge($data, $extraData);
 
-            $status = ['status' => $temp['status']];
+            $status = [
+                'status' => $temp['status'],
+                'is_shown' => 1
+            ];
             $data = array_merge($data, $status);
 
             $this->saveData($path, $data);
