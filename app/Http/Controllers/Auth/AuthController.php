@@ -41,13 +41,22 @@ class AuthController extends ApiController
         $userId = $user->id;
         $fullName = $user->first_name . ' ' . $user->last_name;
         $rating = 0;
+        $shipper = [];
 
         if ($user->isShipper()) {
+            $shipper_id = Auth::user()->shipper()->first()->id;
+            $shipper = ['shipper_id' => $shipper_id];
             $rating = Auth::user()->shipper()->first()->rating;
         } else {
 
         }
-        $data = [ 'token' => $token, 'user_id' => $userId, 'full_name' => $fullName, 'rating' => $rating];
+        $data = [
+            'token' => $token,
+            'user_id' => $userId,
+            'full_name' => $fullName,
+            'rating' => $rating,
+        ];
+        $data = array_merge($data, $shipper);
 
         return response()->json(['success' => true, 'data'=> $data]);
     }

@@ -34,6 +34,7 @@ Route::group(['middleware' => ['jwt.auth', 'role:shipper']], function() {
 //    Route::put('shipper/trip/{requestShipId}', 'Shipper\ShipperTripController@update');
     // Verify receiver verification code
     Route::put('receiver/trip/{requestShipId}', 'Shipper\ReceiverTripController@update');
+
 });
 
 Route::group(['middleware' => ['jwt.auth', 'role:packageOwner']], function() {
@@ -48,6 +49,8 @@ Route::group(['middleware' => ['jwt.auth', 'role:packageOwner']], function() {
     Route::apiResource('packageOwners', 'PackageOwner\PackageOwnerController', ['except' => [
         'destroy', 'show', 'store'
     ]]);
+
+    Route::post('requestShips/rating', 'RequestShip\RequestShipRatingController@index');
 });
 
 Route::get('/sendSMS/{phoneNumber}', 'SMSController@index');
