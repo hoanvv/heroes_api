@@ -166,6 +166,19 @@ class RequestShip extends Model
     {
         return $this->verified_otp == RequestShip::VERIFIED_OTP;
     }
+
+    public function getCoordinateFromPickupLocation()
+    {
+        $coordinateArray = json_decode($this->pickup_location, true);
+        return $coordinateArray;
+    }
+
+    public function getCoordinateFromDestination()
+    {
+        $coordinateArray = json_decode($this->destination, true);
+        return $coordinateArray;
+    }
+
     // Relationship
     public function packageType()
     {

@@ -57,3 +57,4 @@ Route::get('/sendSMS/{phoneNumber}', 'SMSController@index');
 Route::get('/verifyCode/{phoneNumber}/{verificationCode}', 'SMSController@verifyCode');
 
 Route::get('/qrcode', 'SMSController@createQR');
+Route::get('/map', 'MapController@index');
