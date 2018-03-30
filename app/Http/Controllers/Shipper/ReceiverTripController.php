@@ -57,10 +57,13 @@ class ReceiverTripController extends Controller
             // Update request ship status on firebase
             $path = "package/package-owner/{$requestShipOwner->id}/{$requestShip->id}/status";
             $this->saveData($path, $statusTrip);
+            $path = "package/package-owner/{$requestShipOwner->id}/{$requestShip->id}/is_shown";
+            $this->saveData($path, 1);
 
             $shipperId = $requestShip->trip()->first()->shipper_id;
-            $path = "package/shipper/{$shipperId}/{$requestShip->id}/status";
-            $this->saveData($path, $statusTrip);
+            $path = "package/shipper/{$shipperId}/{$requestShip->id}";
+//            $this->saveData($path, $statusTrip);
+            $this->deleteData($path);
 
             $message = array(
                 'success' => true,
