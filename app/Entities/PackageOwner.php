@@ -28,8 +28,9 @@ class PackageOwner extends User
     public static function getRequestShipList($userId)
     {
         $records = DB::select(
-            'SELECT rs.id, rs.created_at, rs.pickup_location_address, rs.destination_address, rt1.status'
+            'SELECT rs.id, rs.created_at, rs.pickup_location_address, rs.destination_address, rt1.status, t.package_owner_rating, t.receiver_rating'
             . ' FROM request_ships rs'
+            . ' JOIN trips t ON (rs.id == t.request_ship_id)'
             . ' JOIN request_trackings rt1 ON (rs.id = rt1.request_ship_id)'
             . ' LEFT OUTER JOIN request_trackings rt2 ON (rs.id = rt2.request_ship_id AND'
             . ' (rt1.changed_at < rt2.changed_at OR rt1.changed_at = rt2.changed_at AND rt1.id < rt2.id))'

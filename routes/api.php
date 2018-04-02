@@ -27,11 +27,6 @@ Route::group(['middleware' => ['jwt.auth', 'role:shipper']], function() {
     ]]);
     // Request Ship
     Route::apiResource('shipper/trip', 'Shipper\ShipperTripController');
-//    Route::get('shipper/trip', 'Shipper\ShipperTripController@index');
-//    // Pick up package
-//    Route::post('shipper/trip', 'Shipper\ShipperTripController@store');
-//    // Verify Po verification code
-//    Route::put('shipper/trip/{requestShipId}', 'Shipper\ShipperTripController@update');
     // Verify receiver verification code
     Route::put('receiver/trip/{requestShipId}', 'Shipper\ReceiverTripController@update');
 
@@ -39,17 +34,12 @@ Route::group(['middleware' => ['jwt.auth', 'role:shipper']], function() {
 
 Route::group(['middleware' => ['jwt.auth', 'role:packageOwner']], function() {
     // Request Ship
-
-//    Route::get('packageOwner/trip', 'PackageOwner\PackageOwnerTripController@index');
-//    Route::get('packageOwner/trip/{$id}', 'PackageOwner\PackageOwnerTripController@index');
-    // Verify OTP
-//    Route::put('packageOwner/trip/{requestShipId}', 'PackageOwner\PackageOwnerTripController@update');
-    // PO information
     Route::apiResource('packageOwner/trip', 'PackageOwner\PackageOwnerTripController');
+    // PO information
     Route::apiResource('packageOwners', 'PackageOwner\PackageOwnerController', ['except' => [
         'destroy', 'show', 'store'
     ]]);
-
+    // PO rating
     Route::post('requestShips/rating', 'RequestShip\RequestShipRatingController@index');
 });
 

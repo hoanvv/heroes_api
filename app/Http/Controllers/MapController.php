@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Entities\RequestShip;
+use App\Traits\DistanceMatrixServiceCustom;
 use Illuminate\Http\Request;
 use Ivory\GoogleMap\Service\DistanceMatrix\DistanceMatrixService;
 use Http\Adapter\Guzzle6\Client;
@@ -14,6 +15,8 @@ use Ivory\GoogleMap\Service\Base\Location\CoordinateLocation;
 
 class MapController extends Controller
 {
+    use DistanceMatrixServiceCustom;
+
     public function index()
     {
         $distanceMatrix = new DistanceMatrixService(
@@ -21,33 +24,21 @@ class MapController extends Controller
             new GuzzleMessageFactory()
         );
 
-        $requestShip = RequestShip::find(5);
+        $requestShip = RequestShip::find(14);
 
-        $pickupArray = $requestShip->getCoordinateFromPickupLocation();
-        $destinationArray = $requestShip->getCoordinateFromDestination();
+        $pickupTemp = $requestShip->getCoordinateFromPickupLocation();
+        $destinationTemp = $requestShip->getCoordinateFromDestination();
+//        $pickupTemp['latitude'] = 16.058580;
+//        $pickupTemp['longitude'] = 108.206303;
+//        $destinationTemp['latitude'] = 16.017873;
+//        $destinationTemp['longitude'] = 108.231403;
 
+        $pickup = $this->getCoordinateFromArray($pickupTemp);
+        $destination = $this->getCoordinateFromArray($destinationTemp);
+        for ($i = 1; $i < 20; $i++) {
+            $response = $this->getDistanceMatrix($pickup, $destination);
+        }
 
-        $pickup = new CoordinateLocation(
-            new Coordinate(
-                $pickupArray['latitude'],
-                $pickupArray['longitude']
-            )
-        );
-        $destination = new CoordinateLocation(
-            new Coordinate(
-                $destinationArray['latitude'],
-                $destinationArray['longitude']
-            )
-        );
-        $request = new DistanceMatrixRequest(
-            [$pickup],
-            [$destination]
-        );
-
-        $request->setTravelMode(TravelMode::DRIVING);
-
-        $response = $distanceMatrix->process($request);
-
-        dd($response->getRows()[0]);
+        echo $this->getDistanceFromResponse($response);
     }
 }
