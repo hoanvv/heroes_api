@@ -31,20 +31,31 @@ class RequestTrackingTableSeeder extends Seeder
             // Insert data for request package into firebase
             $path = "package/available/{$requestShip->id}";
 
-            $pickup_location = $requestShip->only('pickup_location');
-            $data = json_decode($pickup_location['pickup_location'], true);
+            $pickup_location = $requestShip->pickup_location;
+            $pickup_location_array = json_decode($pickup_location, true);
+            $pickup_location_array['pickup_latitude'] = $pickup_location_array['latitude'];
+            unset($pickup_location_array['latitude']);
+            $pickup_location_array['pickup_longitude'] = $pickup_location_array['longitude'];
+            unset($pickup_location_array['longitude']);
+
+            $destination = $requestShip->destination;
+            $destination_array = json_decode($destination, true);
+            $destination_array['destination_latitude'] = $destination_array['latitude'];
+            unset($destination_array['latitude']);
+            $destination_array['destination_longitude'] = $destination_array['longitude'];
+            unset($destination_array['longitude']);
+
             $extraData = $requestShip->only(['distance', 'destination_address', 'pickup_location_address', 'price', 'id']);
-            $data = array_merge($data, $extraData);
 
             $status = [
                 'status' => $temp['status'],
                 'is_shown' => 1
             ];
-            $data = array_merge($data, $status);
+            $data = array_merge($pickup_location_array, $destination_array, $extraData, $status);
 
             $this->saveData($path, $data);
-            unset($temp);
             unset($data);
+            unset($temp);
         }
 
         $this->insertIgnoreRecords('request_trackings', $records);
