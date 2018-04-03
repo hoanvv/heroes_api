@@ -17,7 +17,8 @@ class RequestShipRatingController extends Controller
     {
         $rules = [
             'request_ship_id' => 'required|integer',
-            'rating' => 'required|numeric'
+            'rating' => 'required|numeric',
+            'package_owner_comment' => 'string'
         ];
 
         $this->validate($request, $rules);
@@ -39,7 +40,7 @@ class RequestShipRatingController extends Controller
         $finalTracking = RequestTracking::where([
             ['request_ship_id', $data['request_ship_id']],
             ['status', 4]
-        ]);
+        ])->first();
 
         if (empty($finalTracking) || $requestShip->user_id != $user->id) {
             $message = array(
@@ -53,6 +54,10 @@ class RequestShipRatingController extends Controller
             $total = $totalDeliveredTrip->total;
             $currentRating = $shipper->rating;
             $rating = ($currentRating * $total + $data['rating']) / ($total + 1);
+
+            if ($request->has('package_owner_comment')) {
+                $trip->package_owner_comment = $data['package_owner_comment'];
+            }
 
             $trip->shipper_rating = $data['rating'];
             $trip->save();

@@ -44,7 +44,7 @@ class PackageOwner extends User
     {
         $sql = "";
         if ($isPicked) {
-            $sql = 'SELECT rs.*, t.receiver_rating, t.package_owner_rating, u.first_name, u.last_name, u.phone, s.rating, s.avatar, rt1.status, pt.name as package_type'
+            $sql = 'SELECT rs.*, t.receiver_rating, t.shipper_rating, u.first_name, u.last_name, u.phone, s.rating, s.avatar, rt1.status, pt.name as package_type'
                 . ' FROM users u'
                 . ' JOIN shippers s ON (u.id = s.user_id)'
                 . ' JOIN trips t ON (t.shipper_id = s.id)'

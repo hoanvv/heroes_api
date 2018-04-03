@@ -22,8 +22,11 @@ class CreateTripsTable extends Migration
             $table->dateTime('pickup_time')->nullable();
             $table->dateTime('dropoff_time')->nullable();
             $table->float('package_owner_rating')->nullable();
+            $table->text('package_owner_comment')->nullable();
             $table->float('receiver_rating')->nullable();
+            $table->text('receiver_comment')->nullable();
             $table->float('shipper_rating')->nullable();
+            $table->text('shipper_comment')->nullable();
             $table->timestamps();
 
             $table->foreign('request_ship_id')->references('id')->on('request_ships');

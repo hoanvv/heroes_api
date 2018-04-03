@@ -16,7 +16,9 @@ class RequestTracking extends Model
         'request_ship_id',
         'user_id',
         'status',
-        'changed_at'
+        'changed_at',
+        'package_owner_rating',
+        'package_owner_comment'
     ];
 
     // Method for getting status
