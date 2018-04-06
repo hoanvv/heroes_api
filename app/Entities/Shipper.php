@@ -81,4 +81,25 @@ class Shipper extends User
             return $records[0];
         }
     }
+
+    public static function getNotCompletedRequestShipList($shipperId)
+    {
+        $records = DB::select(
+            'SELECT rs.pickup_location, rs.destination, rt1.status'
+            . ' FROM trips t'
+            . ' JOIN request_ships rs ON (t.request_ship_id = rs.id)'
+            . ' JOIN request_trackings rt1 ON (rs.id = rt1.request_ship_id)'
+            . ' LEFT OUTER JOIN request_trackings rt2 ON (rs.id = rt2.request_ship_id AND'
+            . ' (rt1.changed_at < rt2.changed_at OR rt1.changed_at = rt2.changed_at AND rt1.id < rt2.id))'
+            . ' WHERE rt2.id IS NULL AND t.shipper_id = :shipper_id'
+            . ' AND (rt1.status = :status1 OR rt1.status = :status2)',
+            [
+                'shipper_id' => $shipperId,
+                'status1' => RequestTracking::ACCEPTED_REQUEST,
+                'status2' => RequestTracking::DELIVERING_TRIP
+            ]
+        );
+
+        return $records;
+    }
 }

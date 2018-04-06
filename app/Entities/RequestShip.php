@@ -150,7 +150,16 @@ class RequestShip extends Model
         'verified_receiver_code',
         'verified_otp'
     ];
-
+    // Defining An Accessor
+//    public function getPickupLocationAttribute($value)
+//    {
+//        return json_decode($value, true);
+//    }
+//
+//    public function getDestinationAttribute($value)
+//    {
+//        return json_decode($value, true);
+//    }
     // Utility function
     public function isVerifiedPOCode()
     {

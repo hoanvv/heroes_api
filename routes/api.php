@@ -29,7 +29,8 @@ Route::group(['middleware' => ['jwt.auth', 'role:shipper']], function() {
     Route::apiResource('shipper/trip', 'Shipper\ShipperTripController');
     // Verify receiver verification code
     Route::put('receiver/trip/{requestShipId}', 'Shipper\ReceiverTripController@update');
-
+    // Shortest route
+    Route::get('shortestRoute', 'Shipper\ShortestRouteController@index');
 });
 
 Route::group(['middleware' => ['jwt.auth', 'role:packageOwner']], function() {
