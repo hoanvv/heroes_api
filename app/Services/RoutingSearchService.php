@@ -23,8 +23,10 @@ class RoutingSearchService
     private $x;
     private $positionNumber;
     private $minSpending;
+    private $pairPos;
+    private $odd;
 
-    public function __construct($positions)
+    public function __construct($positions, $pairPos)
     {
         $this->positionNumber = sizeof($positions);
         $this->free = array_fill(0, $this->positionNumber, 1);
@@ -32,6 +34,8 @@ class RoutingSearchService
         $this->t[0] = 0;
         $this->x[0] = 0;
         $this->minSpending = 100000000;
+        $this->odd = 0;
+        $this->pairPos = $pairPos;
 
         $this->positions = $positions;
         $this->createDistanceMatrix();
@@ -60,9 +64,14 @@ class RoutingSearchService
     {
         for ($j = 1; $j < $this->positionNumber; $j++) {
             if ($this->free[$j]) {
-                if ($j % 2 == 0 && $this->free[$j - 1] == 1) {
+                if ($this->pairPos[$j] == 0) {
+                    $this->odd = (int)(!$this->odd);
+                } elseif ($j % 2 == 0 && $this->free[$j - 1] == 1) {
                     continue;
+                } else {
+
                 }
+
                 $this->x[$i] = $j;
                 $this->t[$i] = $this->t[$i-1] + $this->distanceMatrix[$this->x[$i-1]][$j];
                 // echo $distanceMatrix[0][1];

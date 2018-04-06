@@ -26,28 +26,28 @@ class ShortestRouteController extends Controller
         $positions = [];
         $check = [];
         array_push($positions, $currentPosition);
-        $check[0] = 0;
+        $pairPos[0] = 0;
         $i = 1;
         foreach ($requestPositions as $item) {
-            $pickupLocation = json_decode($item->pickup_location, true);
-            $destination = json_decode($item->destination, true);
-            array_push($positions, $pickupLocation, $destination);
-//            if ($item->status == RequestTracking::ACCEPTED_REQUEST) {
-//                $check[$i++] = 1;
-//                $check[$i++] = 1;
-//                $pickupLocation = json_decode($item->pickup_location, true);
-//                $destination = json_decode($item->destination, true);
-//                array_push($positions, $pickupLocation, $destination);
-//            } elseif ($item->status == RequestTracking::DELIVERING_TRIP) {
-//                $check[$i++] = 0;
-//                $destination = json_decode($item->destination, true);
-//                array_push($positions, $destination);
-//            } else {
-//
-//            }
+//            $pickupLocation = json_decode($item->pickup_location, true);
+//            $destination = json_decode($item->destination, true);
+//            array_push($positions, $pickupLocation, $destination);
+            if ($item->status == RequestTracking::ACCEPTED_REQUEST) {
+                $pairPos[$i++] = 1;
+                $pairPos[$i++] = 1;
+                $pickupLocation = json_decode($item->pickup_location, true);
+                $destination = json_decode($item->destination, true);
+                array_push($positions, $pickupLocation, $destination);
+            } elseif ($item->status == RequestTracking::DELIVERING_TRIP) {
+                $pairPos[$i++] = 0;
+                $destination = json_decode($item->destination, true);
+                array_push($positions, $destination);
+            } else {
+
+            }
         }
 
-        $routingSearch = new RoutingSearchService($positions);
+        $routingSearch = new RoutingSearchService($positions, $pairPos);
 
         $data = [];
         foreach ($routingSearch->getBestRoute() as $pos) {
