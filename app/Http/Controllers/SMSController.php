@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Traits\FirebaseConnection;
 use App\Traits\SMSTrait;
 use Illuminate\Http\Request;
 use QrCode;
@@ -12,13 +13,19 @@ use Twilio\Exceptions\RestException;
 class SMSController extends Controller
 {
     use SMSTrait;
+    use FirebaseConnection;
 
     public function index($phoneNumber)
     {
-        return $this->sendVerifySMS('+840984617351');
-        $response = $this->sendNormalSMS("0984617351", "Hoan Dep Trai");
-        $responseObject = json_decode($response);
-        dd($responseObject->message);
+            $path = 'request-ship/1';
+            $data = 'null';
+//            $this->deleteData($path);
+//            $this->saveData($path, $data);
+            $this->setNull($path);
+//        return $this->sendVerifySMS('+840984617351');
+//        $response = $this->sendNormalSMS("0984617351", "Hoan Dep Trai");
+//        $responseObject = json_decode($response);
+//        dd($responseObject->message);
 //        $accountId = 'AC4a3cc712d39d67b557094d120e423d72';
 //        $token = '0ef10217b31a49f4449e8d219b7cd71b';
 //        $fromNumber = '+17162654424';
