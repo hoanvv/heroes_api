@@ -63,8 +63,7 @@ class AuthController extends ApiController
     }
 
     public function logout(Request $request) {
-        $payload = JWTAuth::parseToken()->getPayload();
-        $expires_at = date('d M Y h:i', $payload->get('exp'));
-        return response()->json(['hoan' => $expires_at], 200);
+        auth()->logout();
+        return response()->json(['message' => 'Successfully logged out']);
     }
 }
