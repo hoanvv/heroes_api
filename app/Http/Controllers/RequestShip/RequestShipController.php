@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\RequestShip;
 
 use App\Http\Controllers\ApiController;
+use App\Jobs\PushNotificationToShipper;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -97,7 +98,7 @@ class RequestShipController extends ApiController
         // Insert data for request tracking into database
         $requestTracking = RequestTracking::create($requestTrackingData);
         // Insert data for request package into firebase
-        $path = "package/available/{$requestShip->id}";
+        $path = "package-owner/{$requestShip->user_id}/request-ship/{$requestShip->id}";
 
         $pickup_location = $requestShip->pickup_location;
         $pickup_location_array = json_decode($pickup_location, true);
@@ -120,11 +121,14 @@ class RequestShipController extends ApiController
         ];
         $data = array_merge($pickup_location_array, $destination_array, $extraData, $states);
 
-//        $data = array_merge($data, $states);
-
         $this->saveData($path, $data);
 
-        return $this->showOne($requestShip, 201);
+        $path1 = "request-ship/{$requestShip->id}";
+        $this->saveData($path1, $data);
+
+        PushNotificationToShipper::dispatch($data);
+
+        return $this->showOne($requestShip, 202);
     }
 
     /**

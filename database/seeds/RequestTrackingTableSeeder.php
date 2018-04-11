@@ -56,6 +56,8 @@ class RequestTrackingTableSeeder extends Seeder
 
             $this->saveData($path, $data);
 
+            $path1 = "request-ship/{$requestShip->id}";
+            $this->saveData($path1, $data);
             unset($data);
             unset($temp);
         }
