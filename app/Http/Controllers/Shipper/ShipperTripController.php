@@ -73,6 +73,17 @@ class ShipperTripController extends ApiController
 
         // Prepare data for trip before insert
         $tripData = $request->all();
+        $pickedupTrip = Trip::where('request_ship_id', $tripData['request_ship_id'])->first();
+
+        if ($pickedupTrip) {
+            $message = array(
+                'success' => false,
+                'message' => "Unfortunately, The request was picked up by other shipper",
+                'code' => 404
+            );
+            return response()->json($message, 404);
+        }
+
         $tripData['shipper_id'] = Auth::user()->shipper()->first()->id;
 
         // Insert data for trip into database
@@ -85,25 +96,26 @@ class ShipperTripController extends ApiController
         $this->updateRequestTracking($shipperId, $requestShipId, $status);
 
         // Retrieve this request ship from package/available/{$requestShipId}
-        $path = 'package/available/' . $requestShipId;
+        $path = 'request-ship/' . $requestShipId;
         $availablePackage = $this->retrieveData($path);
         $availablePackage['status'] = $status;
 
         // Remove this request ship from package/available/{$requestShipId}
         $this->deleteData($path);
 
-        // Insert this request ship into package/shipper/{shipper_id}
-        $path = "package/shipper/{$shipperId}/{$requestShipId}";
+        // Insert this request ship into shipper/{shipper_id}/request-ship
+        $path = "shipper/{$shipperId}/request-ship/{$requestShipId}";
         $this->saveData($path, $availablePackage);
         // Insert this request ship into package/package-owner/{package_owner_id}
         $packageOwner = RequestShip::findOrFail($requestShipId)->user()->first();
         $packageOwnerId = $packageOwner->id;
-        $packageOwnerPhone = $packageOwner->phone;
 
-        $path = "package/package-owner/{$packageOwnerId}/{$requestShipId}";
+        $path = "package-owner/{$packageOwnerId}/notification/{$requestShipId}";
         $availablePackage['shipper_id'] = $shipperId;
-        $availablePackage['is_shown'] = 1;
         $this->saveData($path, $availablePackage);
+
+        $path = "package-owner/{$packageOwnerId}/request-ship/{$requestShipId}/status";
+        $this->saveData($path, $status);
 
         // Return pickup location and destination for showing the route on map
         $data = RequestShip::findOrFail($requestShipId)->only(['pickup_location', 'destination']);
