@@ -170,28 +170,43 @@ class ShipperTripController extends ApiController
             );
             $status = 401;
         } else {
-            // Send OTP code to package owner
-            $PoPhone = $requestShipOwner->phone;
-            $response = $this->sendVerifySMS($PoPhone);
+            // Send verification code to receiver
+            $receiverPhone = $requestShip->receiver_phone;
+            $receiverCode = $requestShip->receiver_verification_code;
+
+            $response = $this->sendNormalSMS($receiverPhone, $receiverCode);
             $responseObject = json_decode($response);
             if (!$responseObject->success) {
                 $message = array(
                     'success' => false,
                     'message' => $responseObject->message,
-                    'code' => 403
+                    'code' => $responseObject->code
                 );
-                return response()->json($message, 403);
+                return response()->json($message, $responseObject->code);
             }
 
             // Update status of po verification code
             $requestShip->verified_po_code = RequestShip::VERIFIED_PO_CODE;
             $requestShip->save();
 
+            // Prepare data for request tracking before insert
+            $status = RequestTracking::DELIVERING_TRIP;
+            $this->updateRequestTracking($requestShipOwner->id, $requestShip->id, $status);
+
+            // Update request ship status on firebase
+            $path = "package-owner/{$requestShipOwner->id}/request-ship/{$requestShip->id}/status";
+            $this->saveData($path, $status);
+
+            $shipperId = $requestShip->trip()->first()->shipper_id;
+            $path = "shipper/{$shipperId}/request-ship/{$requestShip->id}/status";
+            $this->saveData($path, $status);
+
             $message = array(
                 'success' => true,
-                'message' => 'Package owner verification code was verified. Please wait Package owner to confirm again.',
+                'message' => 'Package owner verification code was verified. You can begin the trip',
                 'code' => 200
             );
+
             $status = 200;
 
         }

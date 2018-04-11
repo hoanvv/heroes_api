@@ -35,7 +35,9 @@ Route::group(['middleware' => ['jwt.auth', 'role:shipper']], function() {
 
 Route::group(['middleware' => ['jwt.auth', 'role:packageOwner']], function() {
     // Request Ship
-    Route::apiResource('packageOwner/trip', 'PackageOwner\PackageOwnerTripController');
+    Route::apiResource('packageOwner/trip', 'PackageOwner\PackageOwnerTripController', ['except' => [
+        'update'
+    ]]);
     // PO information
     Route::apiResource('packageOwners', 'PackageOwner\PackageOwnerController', ['except' => [
         'destroy', 'show', 'store'

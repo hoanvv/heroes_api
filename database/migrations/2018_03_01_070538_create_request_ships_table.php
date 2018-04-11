@@ -35,7 +35,6 @@ class CreateRequestShipsTable extends Migration
             $table->integer('verified_po_code')->default(RequestShip::UNVERIFIED_PO_CODE);
             $table->string('receiver_verification_code')->nullable();
             $table->integer('verified_receiver_code')->default(RequestShip::UNVERIFIED_RECEIVER_CODE);
-            $table->integer('verified_otp')->default(RequestShip::UNVERIFIED_OTP);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
