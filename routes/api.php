@@ -22,6 +22,7 @@ Route::group(['middleware' => ['jwt.auth']], function() {
 
 Route::group(['middleware' => ['jwt.auth', 'role:shipper']], function() {
     // Shipper information
+    Route::get('shipper/online', 'Shipper\ShipperController@changeShippingStatus');
     Route::apiResource('shippers', 'Shipper\ShipperController', ['except' => [
         'destroy', 'show', 'store'
     ]]);

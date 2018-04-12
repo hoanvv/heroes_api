@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Shipper;
 
+use App\Entities\Shipper;
 use App\Entities\User;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
@@ -78,4 +79,36 @@ class ShipperController extends ApiController
         return response()->json($message, $status);
     }
 
+    public function changeShippingStatus(Request $request)
+    {
+        $shipper = Auth::user()->shipper()->first();
+
+        $notCompletedTrip = Shipper::getNotCompletedRequestShipList($shipper->id);
+
+        if ($notCompletedTrip && $shipper->is_online == Shipper::ONLINE_SHIP) {
+            $message = array(
+                'success' => false,
+                'message' => "You cannot turn off if you dont complete to deliver all package that you picked up",
+                'code' => 403
+            );
+            return response()->json($message, 403);
+        }
+
+        $shipper->is_online = (int)!$shipper->is_online;
+        $shipper->save();
+
+        if ($shipper->is_online) {
+            $value = "You are online";
+        } else {
+            $value = "You are offline";
+        }
+
+        $message = array(
+            'success' => true,
+            'message' => $value,
+            'code' => 200
+        );
+        return response()->json($message, 200);
+
+    }
 }

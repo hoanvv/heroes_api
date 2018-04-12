@@ -38,6 +38,7 @@ class AuthController extends ApiController
         }
         // all good so return the token
         $user = Auth::user();
+
         $userId = $user->id;
         $roleId = $user->role_id;
         $fullName = $user->first_name . ' ' . $user->last_name;
@@ -45,8 +46,13 @@ class AuthController extends ApiController
         $shipper = [];
         if ($user->isShipper()) {
             $shipper_id = Auth::user()->shipper()->first()->id;
-            $shipper = ['shipper_id' => $shipper_id];
+            $is_online = $rating = Auth::user()->shipper()->first()->is_online;
+            $shipper = [
+                'shipper_id' => $shipper_id,
+                'is_online' => $is_online
+            ];
             $rating = Auth::user()->shipper()->first()->rating;
+
         } else {
 
         }
