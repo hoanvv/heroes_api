@@ -114,7 +114,19 @@ class RequestShipController extends ApiController
         $destination_array['destination_longitude'] = $destination_array['longitude'];
         unset($destination_array['longitude']);
 
-        $extraData = $requestShip->only(['distance', 'destination_address', 'pickup_location_address', 'price', 'id']);
+        $extraData = $requestShip->only([
+            'distance',
+            'destination_address',
+            'pickup_location_address',
+            'price',
+            'id',
+            'size'
+        ]);
+        if ($extraData['size']) {
+            $extraData['size'] = json_decode($extraData['size'], true);
+        }
+        $extraData['package_type'] = $requestShip->packageType()->first()->name;
+
         $states = [
             'status' => $requestTracking->status,
             'is_shown' => 1
