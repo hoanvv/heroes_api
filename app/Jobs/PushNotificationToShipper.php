@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Entities\RequestShip;
 use App\Entities\Shipper;
+use App\Entities\Trip;
 use App\Traits\DistanceMatrixServiceCustom;
 use App\Traits\FirebaseConnection;
 use Illuminate\Bus\Queueable;
@@ -65,7 +66,7 @@ class PushNotificationToShipper implements ShouldQueue
             return $rating;
         });
 
-        $delayTime = 5;
+        $delayTime = 7;
         $temp = current($shippers);
         $previousRating = $temp['rating'];
         foreach ($shippers as $shipper) {
@@ -74,6 +75,8 @@ class PushNotificationToShipper implements ShouldQueue
                 $previousRating = $shipper['rating'];
                 sleep($delayTime);
                 $delayTime += 2;
+                $existedTrip = Trip::where('request_ship_id', $this->data['id'])->first();
+                if ($existedTrip) { break; }
             }
 
             $path = "shipper/{$shipper['id']}/notification/{$this->data['id']}";
