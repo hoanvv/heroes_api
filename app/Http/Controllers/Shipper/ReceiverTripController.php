@@ -16,6 +16,11 @@ class ReceiverTripController extends Controller
     use SMSTrait;
     use UpdateRequestTracking;
 
+    public function __construct()
+    {
+        $this->middleware('online');
+    }
+
     public function update(Request $request, $requestShipId)
     {
         $rules = [

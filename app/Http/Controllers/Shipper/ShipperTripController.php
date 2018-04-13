@@ -20,6 +20,13 @@ class ShipperTripController extends ApiController
     use FirebaseConnection;
     use SMSTrait;
 
+    public function __construct()
+    {
+        $this->middleware('online')->except([
+            'show', 'index'
+        ]);
+    }
+
     public function index()
     {
        $shipperId = Auth::user()->shipper()->first()->id;
