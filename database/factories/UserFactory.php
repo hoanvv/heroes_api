@@ -39,8 +39,8 @@ $factory->define(App\Entities\Shipper::class, function (Faker $faker) {
     return [
         'user_id' => 1,
         'rating' => mt_rand(0, 5),
-        'latitude' => null,
-        'longitude' => null,
+        'latitude' => 16.0536514,
+        'longitude' => 108.2175914,
         'avatar' => null,
         'identity_card' => $faker->idNumber,
         'is_online' => mt_rand(0, 1)
@@ -52,8 +52,8 @@ $factory->define(App\Entities\PackageOwner::class, function (Faker $faker) {
     return [
         'user_id' => 1,
         'rating' => mt_rand(0, 5),
-        'latitude' => null,
-        'longitude' => null
+        'latitude' => 16.0536514,
+        'longitude' => 108.2175914
     ];
 });
 

@@ -101,14 +101,14 @@ class PackageOwnerTripController extends ApiController
         $this->updateRequestTracking($requestShipOwner->id, $requestShip->id, $status);
 
         // Update request ship status on firebase
-        $path = "package/package-owner/{$requestShipOwner->id}/{$requestShip->id}/status";
+        $path = "package-owner/{$requestShipOwner->id}/request-ship/{$requestShip->id}/status";
         $this->saveData($path, $status);
 
         $shipperId = $requestShip->trip()->first()->shipper_id;
-        $path = "package/shipper/{$shipperId}/{$requestShip->id}/status";
+        $path = "shipper/{$shipperId}/request-ship/{$requestShip->id}/status";
         $this->saveData($path, $status);
-        $path = "package/shipper/{$shipperId}/{$requestShip->id}/is_shown";
-        $this->saveData($path, 1);
+//        $path = "package/shipper/{$shipperId}/{$requestShip->id}/is_shown";
+//        $this->saveData($path, 1);
 
         $message = array(
             'success' => true,

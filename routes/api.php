@@ -22,6 +22,7 @@ Route::group(['middleware' => ['jwt.auth']], function() {
 
 Route::group(['middleware' => ['jwt.auth', 'role:shipper']], function() {
     // Shipper information
+    Route::get('shipper/online', 'Shipper\ShipperController@changeShippingStatus');
     Route::apiResource('shippers', 'Shipper\ShipperController', ['except' => [
         'destroy', 'show', 'store'
     ]]);
@@ -31,11 +32,15 @@ Route::group(['middleware' => ['jwt.auth', 'role:shipper']], function() {
     Route::put('receiver/trip/{requestShipId}', 'Shipper\ReceiverTripController@update');
     // Shortest route
     Route::get('shortestRoute', 'Shipper\ShortestRouteController@index');
+    // stistic outcome
+    Route::get('shipper/outcome/{factor}', 'Shipper\ShipperController@statisticOutcome');
 });
 
 Route::group(['middleware' => ['jwt.auth', 'role:packageOwner']], function() {
     // Request Ship
-    Route::apiResource('packageOwner/trip', 'PackageOwner\PackageOwnerTripController');
+    Route::apiResource('packageOwner/trip', 'PackageOwner\PackageOwnerTripController', ['except' => [
+        'update'
+    ]]);
     // PO information
     Route::apiResource('packageOwners', 'PackageOwner\PackageOwnerController', ['except' => [
         'destroy', 'show', 'store'

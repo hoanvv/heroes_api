@@ -16,6 +16,11 @@ class ReceiverTripController extends Controller
     use SMSTrait;
     use UpdateRequestTracking;
 
+    public function __construct()
+    {
+        $this->middleware('online');
+    }
+
     public function update(Request $request, $requestShipId)
     {
         $rules = [
@@ -55,14 +60,16 @@ class ReceiverTripController extends Controller
             $requestShip->verified_receiver_code = RequestShip::VERIFIED_RECEIVER_CODE;
             $requestShip->save();
             // Update request ship status on firebase
-            $path = "package/package-owner/{$requestShipOwner->id}/{$requestShip->id}/status";
-            $this->saveData($path, $statusTrip);
-            $path = "package/package-owner/{$requestShipOwner->id}/{$requestShip->id}/is_shown";
-            $this->saveData($path, 1);
+            $path = "package-owner/{$requestShipOwner->id}/request-ship/{$requestShip->id}";
+            $requestT = $this->retrieveData($path);
+            $requestT['status'] = $statusTrip;
+            $this->deleteData($path);
+
+            $path = "package-owner/{$requestShipOwner->id}/notification/{$requestShip->id}";
+            $this->saveData($path, $requestT);
 
             $shipperId = $requestShip->trip()->first()->shipper_id;
-            $path = "package/shipper/{$shipperId}/{$requestShip->id}";
-//            $this->saveData($path, $statusTrip);
+            $path = "shipper/{$shipperId}/request-ship/{$requestShip->id}";
             $this->deleteData($path);
 
             $message = array(

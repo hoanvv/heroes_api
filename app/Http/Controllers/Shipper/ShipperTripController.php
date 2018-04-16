@@ -20,6 +20,13 @@ class ShipperTripController extends ApiController
     use FirebaseConnection;
     use SMSTrait;
 
+    public function __construct()
+    {
+        $this->middleware('online')->except([
+            'show', 'index'
+        ]);
+    }
+
     public function index()
     {
        $shipperId = Auth::user()->shipper()->first()->id;
@@ -73,6 +80,17 @@ class ShipperTripController extends ApiController
 
         // Prepare data for trip before insert
         $tripData = $request->all();
+        $pickedupTrip = Trip::where('request_ship_id', $tripData['request_ship_id'])->first();
+
+        if ($pickedupTrip) {
+            $message = array(
+                'success' => false,
+                'message' => "Unfortunately, The request was picked up by other shipper",
+                'code' => 404
+            );
+            return response()->json($message, 404);
+        }
+
         $tripData['shipper_id'] = Auth::user()->shipper()->first()->id;
 
         // Insert data for trip into database
@@ -85,25 +103,26 @@ class ShipperTripController extends ApiController
         $this->updateRequestTracking($shipperId, $requestShipId, $status);
 
         // Retrieve this request ship from package/available/{$requestShipId}
-        $path = 'package/available/' . $requestShipId;
+        $path = 'request-ship/' . $requestShipId;
         $availablePackage = $this->retrieveData($path);
         $availablePackage['status'] = $status;
 
         // Remove this request ship from package/available/{$requestShipId}
         $this->deleteData($path);
 
-        // Insert this request ship into package/shipper/{shipper_id}
-        $path = "package/shipper/{$shipperId}/{$requestShipId}";
+        // Insert this request ship into shipper/{shipper_id}/request-ship
+        $path = "shipper/{$shipperId}/request-ship/{$requestShipId}";
         $this->saveData($path, $availablePackage);
         // Insert this request ship into package/package-owner/{package_owner_id}
         $packageOwner = RequestShip::findOrFail($requestShipId)->user()->first();
         $packageOwnerId = $packageOwner->id;
-        $packageOwnerPhone = $packageOwner->phone;
 
-        $path = "package/package-owner/{$packageOwnerId}/{$requestShipId}";
+        $path = "package-owner/{$packageOwnerId}/notification/{$requestShipId}";
         $availablePackage['shipper_id'] = $shipperId;
-        $availablePackage['is_shown'] = 1;
         $this->saveData($path, $availablePackage);
+
+        $path = "package-owner/{$packageOwnerId}/request-ship/{$requestShipId}/status";
+        $this->saveData($path, $status);
 
         // Return pickup location and destination for showing the route on map
         $data = RequestShip::findOrFail($requestShipId)->only(['pickup_location', 'destination']);
@@ -158,28 +177,43 @@ class ShipperTripController extends ApiController
             );
             $status = 401;
         } else {
-            // Send OTP code to package owner
-            $PoPhone = $requestShipOwner->phone;
-            $response = $this->sendVerifySMS($PoPhone);
+            // Send verification code to receiver
+            $receiverPhone = $requestShip->receiver_phone;
+            $receiverCode = $requestShip->receiver_verification_code;
+
+            $response = $this->sendNormalSMS($receiverPhone, $receiverCode);
             $responseObject = json_decode($response);
             if (!$responseObject->success) {
                 $message = array(
                     'success' => false,
                     'message' => $responseObject->message,
-                    'code' => 403
+                    'code' => $responseObject->code
                 );
-                return response()->json($message, 403);
+                return response()->json($message, $responseObject->code);
             }
 
             // Update status of po verification code
             $requestShip->verified_po_code = RequestShip::VERIFIED_PO_CODE;
             $requestShip->save();
 
+            // Prepare data for request tracking before insert
+            $status = RequestTracking::DELIVERING_TRIP;
+            $this->updateRequestTracking($requestShipOwner->id, $requestShip->id, $status);
+
+            // Update request ship status on firebase
+            $path = "package-owner/{$requestShipOwner->id}/request-ship/{$requestShip->id}/status";
+            $this->saveData($path, $status);
+
+            $shipperId = $requestShip->trip()->first()->shipper_id;
+            $path = "shipper/{$shipperId}/request-ship/{$requestShip->id}/status";
+            $this->saveData($path, $status);
+
             $message = array(
                 'success' => true,
-                'message' => 'Package owner verification code was verified. Please wait Package owner to confirm again.',
+                'message' => 'Package owner verification code was verified. You can begin the trip',
                 'code' => 200
             );
+
             $status = 200;
 
         }

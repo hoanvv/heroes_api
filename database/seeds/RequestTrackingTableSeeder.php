@@ -18,6 +18,7 @@ class RequestTrackingTableSeeder extends Seeder
     public function run()
     {
         $requestShips = RequestShip::all();
+        $shippers = \App\Entities\Shipper::all();
         $records = [];
         $i = 1;
         foreach ($requestShips as $requestShip) {
@@ -29,7 +30,7 @@ class RequestTrackingTableSeeder extends Seeder
 
             array_push($records, $temp);
             // Insert data for request package into firebase
-            $path = "package/available/{$requestShip->id}";
+            $path = "package-owner/{$requestShip->user_id}/request-ship/{$requestShip->id}";
 
             $pickup_location = $requestShip->pickup_location;
             $pickup_location_array = json_decode($pickup_location, true);
@@ -45,7 +46,18 @@ class RequestTrackingTableSeeder extends Seeder
             $destination_array['destination_longitude'] = $destination_array['longitude'];
             unset($destination_array['longitude']);
 
-            $extraData = $requestShip->only(['distance', 'destination_address', 'pickup_location_address', 'price', 'id']);
+            $extraData = $requestShip->only([
+                'distance',
+                'destination_address',
+                'pickup_location_address',
+                'price',
+                'id',
+                'size'
+            ]);
+            if ($extraData['size']) {
+                $extraData['size'] = json_decode($extraData['size'], true);
+            }
+            $extraData['package_type'] = $requestShip->packageType()->first()->name;
 
             $status = [
                 'status' => $temp['status'],
@@ -54,6 +66,9 @@ class RequestTrackingTableSeeder extends Seeder
             $data = array_merge($pickup_location_array, $destination_array, $extraData, $status);
 
             $this->saveData($path, $data);
+
+            $path1 = "request-ship/{$requestShip->id}";
+            $this->saveData($path1, $data);
             unset($data);
             unset($temp);
         }
@@ -61,4 +76,5 @@ class RequestTrackingTableSeeder extends Seeder
         $this->insertIgnoreRecords('request_trackings', $records);
 
     }
+
 }

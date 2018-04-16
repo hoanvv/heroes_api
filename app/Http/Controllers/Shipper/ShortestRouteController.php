@@ -11,6 +11,10 @@ use App\Services\RoutingSearchService;
 
 class ShortestRouteController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('online');
+    }
     //
     public function index()
     {
