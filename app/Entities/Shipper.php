@@ -85,7 +85,7 @@ class Shipper extends User
     public static function getNotCompletedRequestShipList($shipperId)
     {
         $records = DB::select(
-            'SELECT rs.pickup_location, rs.destination, rt1.status'
+            'SELECT rs.pickup_location, rs.destination, rt1.status, rs.'
             . ' FROM trips t'
             . ' JOIN request_ships rs ON (t.request_ship_id = rs.id)'
             . ' JOIN request_trackings rt1 ON (rs.id = rt1.request_ship_id)'
@@ -101,5 +101,45 @@ class Shipper extends User
         );
 
         return $records;
+    }
+
+    public static function getTotalOutcome($factor, $shipperId)
+    {
+        $condition = '';
+        $hour = " 00:00:01";
+        switch ($factor) {
+            case "DAILY":
+                $start = date('Y-m-d', time()) . ' ' . $hour;
+                $end = date('Y-m-d', time() + 86400) . ' ' . $hour;
+                $condition = "(request_trackings.changed_at between '{$start}' and '{$end}') ";
+                error_log($condition);
+                break;
+            case "WEEKLY":
+                $condition = "YEARWEEK(`changed_at`, 1) = YEARWEEK(CURDATE(), 1)";
+                break;
+            case "MONTHLY":
+                $currentMonth = (int)date('m');
+                $currentYear = (int)date('Y');
+                $condition = "MONTH(changed_at) = {$currentMonth} AND YEAR(changed_at) = {$currentYear}";
+                break;
+            default:
+                return null;
+        }
+
+        $query = 'SELECT sum(price) as total'
+            .' from trips'
+            .' join request_ships on (trips.request_ship_id = request_ships.id)'
+            .' join request_trackings on (request_ships.id = request_trackings.request_ship_id)'
+            .' where request_trackings.status = 4'
+            ." and trips.shipper_id = {$shipperId}"
+            .' and ' . $condition;
+
+        $record = DB::select($query);
+
+        if (!$record[0]->total) {
+            return null;
+        } else {
+            return $record[0];
+        }
     }
 }
