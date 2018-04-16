@@ -85,7 +85,7 @@ class Shipper extends User
     public static function getNotCompletedRequestShipList($shipperId)
     {
         $records = DB::select(
-            'SELECT rs.pickup_location, rs.destination, rt1.status, rs.'
+            'SELECT rs.pickup_location, rs.destination, rt1.status'
             . ' FROM trips t'
             . ' JOIN request_ships rs ON (t.request_ship_id = rs.id)'
             . ' JOIN request_trackings rt1 ON (rs.id = rt1.request_ship_id)'
