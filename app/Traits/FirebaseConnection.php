@@ -11,8 +11,8 @@ trait FirebaseConnection
     protected function registerServiceWithoutAuthentication()
     {
 //        $serviceAccount = ServiceAccount::fromJsonFile(__DIR__.'/heroes-4875a-firebase-adminsdk-ll17y-5d14066fd1.json');
-        $serviceAccount = ServiceAccount::fromJsonFile(__DIR__ . '/heroes-demo-6e61e-firebase-adminsdk-puc6r-1826563424.json');
-//        $serviceAccount = ServiceAccount::fromJsonFile(__DIR__ . '/heroes-demo2-firebase-adminsdk-yk8uk-792a2b2dfc.json');
+//        $serviceAccount = ServiceAccount::fromJsonFile(__DIR__ . '/heroes-demo-6e61e-firebase-adminsdk-puc6r-1826563424.json');
+        $serviceAccount = ServiceAccount::fromJsonFile(__DIR__ . '/heroes-demo2-firebase-adminsdk-yk8uk-792a2b2dfc.json');
         $firebase = (new Factory())
             ->withServiceAccount($serviceAccount)
             ->create();

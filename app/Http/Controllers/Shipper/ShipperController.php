@@ -131,4 +131,18 @@ class ShipperController extends ApiController
         }
         return response()->json($message, $status);
     }
+
+    public function statisticOutcomeBasingOnFactors()
+    {
+        $shipper = Auth::user()->shipper()->first();
+        $outcome = [];
+        $outcome['daily'] = Shipper::getTotalOutcome('DAILY', $shipper->id);
+        $outcome['weekly'] = Shipper::getTotalOutcome('WEEKLY', $shipper->id);
+        $outcome['monthly'] = Shipper::getTotalOutcome('MONTHLY', $shipper->id);
+
+        $message = ['data' => $outcome];
+        $status = 200;
+
+        return response()->json($message, $status);
+    }
 }

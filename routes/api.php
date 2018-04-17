@@ -34,6 +34,7 @@ Route::group(['middleware' => ['jwt.auth', 'role:shipper']], function() {
     Route::get('shortestRoute', 'Shipper\ShortestRouteController@index');
     // stistic outcome
     Route::get('shipper/outcome/{factor}', 'Shipper\ShipperController@statisticOutcome');
+    Route::get('shipper/outcome', 'Shipper\ShipperController@statisticOutcomeBasingOnFactors');
 });
 
 Route::group(['middleware' => ['jwt.auth', 'role:packageOwner']], function() {

@@ -123,7 +123,7 @@ class Shipper extends User
                 $condition = "MONTH(changed_at) = {$currentMonth} AND YEAR(changed_at) = {$currentYear}";
                 break;
             default:
-                return null;
+                return 0;
         }
 
         $query = 'SELECT sum(price) as total'
@@ -137,7 +137,7 @@ class Shipper extends User
         $record = DB::select($query);
 
         if (!$record[0]->total) {
-            return null;
+            return 0;
         } else {
             return $record[0];
         }
