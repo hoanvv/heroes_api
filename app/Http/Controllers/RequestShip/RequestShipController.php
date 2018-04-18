@@ -4,6 +4,7 @@ namespace App\Http\Controllers\RequestShip;
 
 use App\Http\Controllers\ApiController;
 use App\Jobs\PushNotificationToShipper;
+use App\Traits\UpdateRequestTracking;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +17,7 @@ use App\Traits\FirebaseConnection;
 class RequestShipController extends ApiController
 {
     use FirebaseConnection;
+    use UpdateRequestTracking;
     /**
      * Display a listing of the resource.
      *
@@ -197,9 +199,5 @@ class RequestShipController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
-    }
 
 }

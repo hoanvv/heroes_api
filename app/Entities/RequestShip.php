@@ -232,6 +232,25 @@ class RequestShip extends Model
         return $records;
     }
 
+    public static function getRequestShip($requestShipId)
+    {
+        $records = DB::select(
+            'SELECT rs.*, u.first_name, u.last_name, u.phone, rt1.status, t.shipper_id'
+            . ' FROM request_ships rs'
+            . ' LEFT JOIN trips t ON (t.request_ship_id = rs.id)'
+            . ' JOIN users u ON (rs.user_id = u.id)'
+            . ' JOIN request_trackings rt1 ON (rs.id = rt1.request_ship_id)'
+            . ' LEFT OUTER JOIN request_trackings rt2 ON (rs.id = rt2.request_ship_id AND'
+            . ' (rt1.changed_at < rt2.changed_at OR rt1.changed_at = rt2.changed_at AND rt1.id < rt2.id))'
+            . ' WHERE rt2.id IS NULL AND rs.id = :request_ship_id',
+            ['request_ship_id' => $requestShipId]
+        );
+        if (empty($records)) {
+            return null;
+        } else {
+            return $records[0];
+        }
+    }
     //
     public static function randomCode()
     {
