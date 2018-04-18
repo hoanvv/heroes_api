@@ -4,6 +4,3 @@
         @yield('content')
     </article>
 @include('back-end.inc.footer')
-@section('script')
-
-@show

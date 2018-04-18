@@ -3,6 +3,7 @@
 namespace App\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @SWG\Definition(
@@ -213,6 +214,25 @@ class RequestShip extends Model
         return $this->hasMany('App\Entities\RequestTracking');
     }
 
+    //
+    public static function getRequestShipList()
+    {
+        $records = DB::select(
+            'SELECT rs.id, rs.created_at, rs.pickup_location_address, rs.destination_address, rt1.status, rs.price, u.first_name, u.last_name, pt.name, t.shipper_id'
+            . ' FROM request_ships rs'
+            . ' LEFT JOIN trips t ON (t.request_ship_id = rs.id)'
+            . ' JOIN users u ON (u.id = rs.user_id)'
+            . ' JOIN package_types pt ON (pt.id = rs.package_type_id)'
+            . ' JOIN request_trackings rt1 ON (rs.id = rt1.request_ship_id)'
+            . ' LEFT OUTER JOIN request_trackings rt2 ON (rs.id = rt2.request_ship_id AND'
+            . ' (rt1.changed_at < rt2.changed_at OR rt1.changed_at = rt2.changed_at AND rt1.id < rt2.id))'
+            . ' WHERE rt2.id IS NULL'
+        );
+
+        return $records;
+    }
+
+    //
     public static function randomCode()
     {
         $code = '';

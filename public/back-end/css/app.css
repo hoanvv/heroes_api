@@ -1871,7 +1871,9 @@ span a {
               transform: rotate(90deg); }
     .sidebar .nav > li > a i {
       margin-right: 5px;
-      font-size: 16px; }
+      font-size: 22px;
+      width: 30px;
+    }
       .sidebar .nav > li > a i.arrow {
         float: right;
         font-size: 20px;

@@ -14,9 +14,9 @@
 
         <!-- Theme initialization -->
         <link rel="stylesheet" href="{{ asset('back-end/css/app.css') }}">
-        <link rel="stylesheet" href="{{ asset('back-end/css/jquery.dataTables.min.css') }}">
         <link rel="stylesheet" href="{{ asset('back-end/css/common.css') }}">
         <script src="{{ asset('back-end/js/jquery-1.10.2.min.js') }}"></script>
+        @yield('styles')
     </head>
 
     <body>
