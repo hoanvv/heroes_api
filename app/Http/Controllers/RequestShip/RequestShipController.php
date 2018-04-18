@@ -131,7 +131,8 @@ class RequestShipController extends ApiController
 
         $states = [
             'status' => $requestTracking->status,
-            'is_shown' => 1
+            'is_shown' => 1,
+            'order_by' => 0
         ];
         $data = array_merge($pickup_location_array, $destination_array, $extraData, $states);
 

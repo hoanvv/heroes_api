@@ -61,7 +61,8 @@ class RequestTrackingTableSeeder extends Seeder
 
             $status = [
                 'status' => $temp['status'],
-                'is_shown' => 1
+                'is_shown' => 1,
+                'order_by' => 0
             ];
             $data = array_merge($pickup_location_array, $destination_array, $extraData, $status);
 

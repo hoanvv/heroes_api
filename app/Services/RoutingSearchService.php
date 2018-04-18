@@ -66,7 +66,7 @@ class RoutingSearchService
             if ($this->free[$j]) {
                 if ($this->pairPos[$j] == 0) {
                     $this->odd = (int)(!$this->odd);
-                } elseif ($j % 2 == 0 && $this->free[$j - 1] == 1) {
+                } elseif ($j % 2 == $this->odd && $this->free[$j - 1] == 1) {
                     continue;
                 } else {
 
@@ -79,11 +79,9 @@ class RoutingSearchService
                 if ($this->t[$i] < $this->minSpending) {
                     $this->free[$j] = 0;
                     if ($i == $this->positionNumber - 1) {
-                        if ( $this->t[$this->positionNumber - 1] < $this->minSpending )
-                        {
+                        if ( $this->t[$this->positionNumber - 1] < $this->minSpending ) {
                             for ($ii = 0; $ii < $this->positionNumber; $ii++) {
                                 $this->bestWay[$ii] = $this->x[$ii];
-
                             }
 
                             $this->minSpending = $this->t[$this->positionNumber - 1];

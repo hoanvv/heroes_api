@@ -184,6 +184,7 @@ class PackageOwnerTripController extends ApiController
             $data['id'] = $requestShip->id;
             $data['pickup_location_address'] = $requestShip->pickup_location_address;
             $data['destination_address'] = $requestShip->destination_address;
+            $data['status'] = 0;
             $this->saveData($path, $data);
         }
         //Return
