@@ -25,8 +25,9 @@ class RoutingSearchService
     private $minSpending;
     private $pairPos;
     private $odd;
+    private $destination;
 
-    public function __construct($positions, $pairPos)
+    public function __construct($positions, $pairPos, $destination)
     {
         $this->positionNumber = sizeof($positions);
         $this->free = array_fill(0, $this->positionNumber, 1);
@@ -36,7 +37,7 @@ class RoutingSearchService
         $this->minSpending = 100000000;
         $this->odd = 0;
         $this->pairPos = $pairPos;
-
+        $this->destination = $destination ?: null;
         $this->positions = $positions;
         $this->createDistanceMatrix();
 
@@ -45,11 +46,15 @@ class RoutingSearchService
 
     private function createDistanceMatrix()
     {
-        $length = sizeof($this->positions);
+        $positions = $this->positions;
+        if ($this->destination) {
+            array_push($positions, $this->destination);
+        }
+        $length = sizeof($positions);
         for ($i = 0; $i < $length; $i++) {
             for ($j = $i + 1; $j < $length; $j++) {
-                $startPoint = $this->getCoordinateFromArray($this->positions[$i]);
-                $endPoint = $this->getCoordinateFromArray($this->positions[$j]);
+                $startPoint = $this->getCoordinateFromArray($positions[$i]);
+                $endPoint = $this->getCoordinateFromArray($positions[$j]);
                 $response = $this->getDistanceMatrix($startPoint, $endPoint);
                 $distance = $this->getDistanceFromResponse($response);
 
@@ -74,17 +79,22 @@ class RoutingSearchService
 
                 $this->x[$i] = $j;
                 $this->t[$i] = $this->t[$i-1] + $this->distanceMatrix[$this->x[$i-1]][$j];
-                // echo $distanceMatrix[0][1];
-                // break;
+
                 if ($this->t[$i] < $this->minSpending) {
                     $this->free[$j] = 0;
                     if ($i == $this->positionNumber - 1) {
-                        if ( $this->t[$this->positionNumber - 1] < $this->minSpending ) {
+                        $distance = $this->destination ? $this->distanceMatrix[$this->x[$i]][$this->positionNumber] : 0;
+                        $totalDistance = $this->t[$this->positionNumber - 1] + $distance;
+
+                        if ( $totalDistance < $this->minSpending ) {
                             for ($ii = 0; $ii < $this->positionNumber; $ii++) {
                                 $this->bestWay[$ii] = $this->x[$ii];
                             }
 
-                            $this->minSpending = $this->t[$this->positionNumber - 1];
+                            if ($this->destination) {
+                                $this->bestWay[$this->positionNumber] = $this->positionNumber;
+                            }
+                            $this->minSpending = $totalDistance;
                         }
                     } else {
                         $this->search($i + 1);
