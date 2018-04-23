@@ -15,13 +15,9 @@ class SMSController extends Controller
     use SMSTrait;
     use FirebaseConnection;
 
-    public function index($phoneNumber)
+    public function index(Request $request, $phoneNumber)
     {
-            $path = 'request-ship/1';
-            $data = 'null';
-//            $this->deleteData($path);
-//            $this->saveData($path, $data);
-            $this->setNull($path);
+         dd($request->input('destination'));
 //        return $this->sendVerifySMS('+840984617351');
 //        $response = $this->sendNormalSMS("0984617351", "Hoan Dep Trai");
 //        $responseObject = json_decode($response);
