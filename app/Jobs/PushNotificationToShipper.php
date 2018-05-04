@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Jobs;
-
+ini_set('max_execution_time', 180);
 use App\Entities\RequestShip;
 use App\Entities\Shipper;
 use App\Entities\Trip;
@@ -66,7 +66,7 @@ class PushNotificationToShipper implements ShouldQueue
             return $rating;
         });
 
-        $delayTime = 7;
+        $delayTime = 5;
         $temp = current($shippers);
         $previousRating = $temp['rating'];
         foreach ($shippers as $shipper) {
@@ -74,7 +74,7 @@ class PushNotificationToShipper implements ShouldQueue
             if (floor($rating) != 0) {
                 $previousRating = $shipper['rating'];
                 sleep($delayTime);
-                $delayTime += 2;
+                $delayTime += 0;
                 $existedTrip = Trip::where('request_ship_id', $this->data['id'])->first();
                 if ($existedTrip) { break; }
             }
