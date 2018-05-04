@@ -1,53 +1,139 @@
 @extends('back-end.layouts.app')
+@section('styles')
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
+    <style>
+        .share-button {
+            height: 35px;
+            width: auto;
+            position: relative;
+        }
+        .share-button ul {
+            background: #ccc;
+            color: #fff;
+            width: auto;
+            left: 0;
+            list-style: outside none none;
+            margin: 0 auto;
+            padding: 0 8px;
+            right: 0;
+            height: auto;
+            opacity: 0.9;
+            border-radius: 15px;
+            top: -20px;
+        }
+        .share-button ul li {
+            box-sizing: content-box;
+            cursor: pointer;
+            height: 22px;
+            margin: 0;
+            padding: 8px 0 14px;
+            text-align: center;
+            transition: all 0.3s ease 0s;
+            width: auto;
+            z-index: 2;
+        }
+        .share-button .for-five.active {
+            left: -35px;
+            top: -11px;
+        }
+        .share-button .social.active {
+            display: table;
+            opacity: 1;
+            transform: scale(1) translateY(-90px);
+            transition: all 0.4s ease 0s;
+            position: absolute;
+            bottom: 0px;
+            right: 75%;
+            top: 100%;
+        }
+        .share-button .social {
+            display: none;
+        }
+        .share-button ul::after {
+            border-color: transparent transparent transparent #ccc;
+            border-style: solid;
+            border-width: 12px 0 14px 27px;
+            content: "";
+            display: block;
+            height: 0;
+            margin: 0 auto;
+            position: absolute;
+            right: -17px;
+            top: 36%;
+            width: 0;
+            z-index: -1;
+        }
+    </style>
+@endsection
 @section('content')
 <section id="user-list">
     <div class="container">
-        <h3>List Of Users <a href="/admin/user/create">Add New</a></h3>
+        <h3>List Of Users <a href="/admin/shipper/create">Add New</a></h3>
         <table id="list-users" class="cell-border hover" cellspacing="0" width="100%">
             <thead>
                 <tr>
                     <th>#</th>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Gender</th>
-                    <th>Role</th>
-                    <th>Position</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                    <th>Rating</th>
+                    <th>View/Edit Document(s)</th>
                     <th>Method</th>
                 </tr>
             </thead>
             <tbody>
-            <?php $i = 0 ?>
-            @foreach($list as $item)
-                @php
-                    switch($item->gender) {
-                        case(0);
-                        $item->gender = "Male";
-                        break;
-                        case(1);
-                        $item->gender = "Female";
-                        break;
-                        case(2);
-                        $item->gender = "Other";
-                        break;
-                    }
-                @endphp
+            <?php $i = 0;?>
+            @foreach($shippers as $shipper)
                 <tr>
-                    <td>{{ ++$i }}</td>
-                    <td>{{ $item->name }}</td>
-                    <td>{{ $item->email }}</td>
-                    <td>{{ $item->gender }}</td>
-                    <td>{{ $item->is_admin ? 'Admin' : 'Normal User' }}</td>
-                    <td>{{ $item->position }}</td>
-                    <td>
-                        <button type="button" class='btn btn-warning btn-xs btn-show-profile' data-id="{{$id = $item->id}}">
-                            <i class="fa fa-list" aria-hidden="true"></i>
-                        </button>
-                        <a href="/admin/user/{{$id}}/edit" class='btn btn-success btn-xs'>
-                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                        </a>
-                        <button type="button" class='btn btn-danger btn-xs btn-delete' data-id="{{$id = $item->id}}">
-                            <i class="fa fa-trash" aria-hidden="true"></i>
-                        </button>
+                    <td>{{++$i}}</td>
+                    <td>{{$shipper->user->first_name}} {{$shipper->user->last_name}}</td>
+                    <td>{{$shipper->user->email}}</td>
+                    <td>{{$shipper->user->phone}}</td>
+                    <td style="text-align: center">
+                        <i class="fa fa-check-circle-o"
+                           aria-hidden="true"
+                           style="color:{{$shipper->is_online == 1 ? "#A2E070" : "#ccc"}}; font-size: 2em">
+                        </i>
+                    </td>
+                    <td style="text-align: center">{{$shipper->rating}}</td>
+                    <td style="text-align: center">
+                        <a href="#" style="font-size: 2em"><i class="fa fa-folder-open-o" aria-hidden="true"></i></a>
+                    </td>
+                    <td style="text-align: center">
+                        <div class="share-button">
+                            <span style="font-size: 2em"><i class="fa fa-cog" aria-hidden="true"></i></span>
+                            <div class="social for-five">
+                                <ul>
+                                    <li class="entypo-1">
+                                        <a href="" data-toggle="tooltip" title="Edit">
+                                            <i class="fa fa-pencil-square-o" aria-hidden="true" style="color:#0b91ea; font-size: 2.2em"></i>
+                                        </a>
+                                    </li>
+                                    <li class="entypo-2">
+                                        <a href="#" data-toggle="tooltip" title="Make online">
+                                            <i class="fa fa-check-circle-o"
+                                               aria-hidden="true"
+                                               style="color:#59b50e; font-size: 2.2em">
+                                            </i>
+                                        </a>
+                                    </li>
+                                    <li class="entypo-3">
+                                        <a href="#" data-toggle="tooltip" title="Make offline">
+                                            <i class="fa fa-check-circle-o"
+                                               aria-hidden="true"
+                                               style="color:#252020; font-size: 2.2em">
+                                            </i>
+                                        </a>
+                                    </li>
+                                    <li class="entypo-4">
+                                        <a href="" data-toggle="tooltip" title="Delete">
+                                            <i class="fa fa-trash" aria-hidden="true" style="color:red; font-size: 2.2em"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </td>
                 </tr>
             @endforeach
@@ -58,9 +144,10 @@
                     <th>#</th>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Gender</th>
-                    <th>Role</th>
-                    <th>Position</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                    <th>Rating</th>
+                    <th>View/Edit Document(s)</th>
                     <th>Method</th>
                 </tr>
             </tfoot>
@@ -193,4 +280,21 @@
     ])
 @endif
 @endsection
-
+@section('scripts')
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+            
+            $('.share-button').click(function () {
+                if($(this).find('.social').hasClass('active')) {
+                    $(this).find('.social').removeClass('active');
+                } else {
+                    if($('.share-button').find('.social').hasClass('active')) {
+                        $('.share-button').find('.social').removeClass('active');
+                    }
+                    $(this).find('.social').addClass('active');
+                }
+            });
+        });
+    </script>
+@endsection

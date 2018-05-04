@@ -3,7 +3,7 @@
 @section('styles')
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
 @endsection
-{{--{{dd($requestShips)}}--}}
+
 @section('content')
 <section id="schedule-list">
     <div class="container-fluid">
@@ -26,14 +26,39 @@
             @foreach($requestShips as $requestShip)
                 <tr>
                     <td>{{$requestShip->id}}</td>
-                    <td>{{$requestShip->status}}</td>
+                    <td>
+                        @switch($requestShip->status)
+                            @case(1)
+                            <span> Waiting</span>
+                            @break
+
+                            @case(2)
+                            <span> Accepted</span>
+                            @break
+
+                            @case(3)
+                            <span> Delivering</span>
+                            @break
+
+                            @case(4)
+                            <span> Completed</span>
+                            @break
+                            @default
+                            <span></span>
+                        @endswitch
+                    </td>
                     <td>{{$requestShip->pickup_location_address}} -> {{$requestShip->destination_address}}</td>
                     <td>{{$requestShip->created_at}}</td>
                     <td>{{$requestShip->first_name}} {{$requestShip->last_name}}</td>
-                    <td>{{$requestShip->shipper_id}}</td>
+                    <td>{{$requestShip->shipper_id ? \App\Entities\Shipper::find($requestShip->shipper_id)->user->first_name : ""}}</td>
                     <td>{{$requestShip->price}}</td>
                     <td>{{$requestShip->name}}</td>
-                    <td><button class="btn btn-primary"><i class="icon-th-list icon-white"><b>View Invoice</b></i></button></td>
+                    <td>
+                        <a class="btn btn-primary" href="delivery-request/{{$requestShip->id}}" target="_blank">
+                            <i class="fa fa-list" aria-hidden="true">
+                            </i> View Invoice</i>
+                        </a>
+                    </td>
                 </tr>
             @endforeach
             </tbody>
@@ -66,8 +91,4 @@
         'alert_color' => 'alert-danger'
     ])
 @endif
-@endsection
-
-@section('scripts')
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
 @endsection

@@ -23,4 +23,5 @@ Route::prefix('admin')->group(function () {
     Route::get('/', 'BackEnd\HomeController@index')->name('admin.home');
     Route::post('logout', 'BackEnd\LoginController@logout')->name('admin.logout');
     Route::resource('delivery-request', 'BackEnd\RequestShip\RequestShipController');
+    Route::resource('shipper', 'BackEnd\Shipper\ShipperController');
 });

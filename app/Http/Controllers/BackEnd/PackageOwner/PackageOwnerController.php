@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\BackEnd\RequestShip;
+namespace App\Http\Controllers\BackEnd\PackageOwner;
 
-use App\Entities\RequestShip;
-use App\Entities\Shipper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class RequestShipController extends Controller
+class PackageOwnerController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +14,7 @@ class RequestShipController extends Controller
      */
     public function index()
     {
-        $requestShips = RequestShip::getRequestShipList();
-        return view('back-end.pages.request-ship.list', compact('requestShips'));
+        //
     }
 
     /**
@@ -49,17 +46,7 @@ class RequestShipController extends Controller
      */
     public function show($id)
     {
-        $requestShip = RequestShip::findOrFail($id);
-        $requestShipMore = RequestShip::getRequestShip($id);
-        $status = $requestShipMore->status;
-        $shipperId = $requestShipMore->shipper_id;
-        if ($shipperId) {
-            $shipper = Shipper::findOrFail($shipperId)->user;
-        } else {
-            $shipper = null;
-        }
-//        dd($requestShip->pickup_location);
-        return view('back-end.pages.request-ship.show', compact(['requestShip', 'status', 'shipper']));
+        //
     }
 
     /**
