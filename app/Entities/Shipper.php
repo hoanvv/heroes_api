@@ -10,6 +10,8 @@ class Shipper extends User
 
     const OFFLINE_SHIP = 0;
     const ONLINE_SHIP = 1;
+    const STATUS_DEFAULT_SHIPPER = 1;
+    const STATUS_NORMAL_SHIPPER = 0;
 
     protected $fillable = [
         'user_id',
@@ -18,12 +20,18 @@ class Shipper extends User
         'rating',
         'avatar',
         'identity_card',
-        'is_online'
+        'is_online',
+        'is_default'
     ];
     // Utility functions
     public function isOnline()
     {
         return $this->is_online = Shipper::ONLINE_SHIP;
+    }
+
+    public function isDefault()
+    {
+        return $this->is_default = Shipper::STATUS_DEFAULT_SHIPPER;
     }
     // relationship
     public function user()

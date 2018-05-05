@@ -25,6 +25,7 @@ class CreateShippersTable extends Migration
             $table->string('avatar')->nullable();
             $table->string('identity_card');
             $table->integer('is_online')->default(Shipper::OFFLINE_SHIP);
+            $table->integer('is_default')->default(Shipper::STATUS_NORMAL_SHIPPER);
 
             $table->foreign('user_id')->references('id')->on('users');
         });

@@ -43,7 +43,8 @@ $factory->define(App\Entities\Shipper::class, function (Faker $faker) {
         'longitude' => 108.2175914,
         'avatar' => null,
         'identity_card' => $faker->idNumber,
-        'is_online' => mt_rand(0, 1)
+        'is_online' => mt_rand(0, 1),
+        'is_default' => mt_rand(0, 1)
     ];
 });
 

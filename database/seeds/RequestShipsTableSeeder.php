@@ -13,7 +13,7 @@ class RequestShipsTableSeeder extends Seeder
      */
     public function run()
     {
-        $userIds = DB::table('package_owners')->limit(10)->pluck('user_id');
+        $userIds = DB::table('package_owners')->limit(15)->pluck('user_id');
 
         $records = [
             [
@@ -29,7 +29,7 @@ class RequestShipsTableSeeder extends Seeder
                 "distance" => 3.70,
                 "duration" => 600,
                 "size" => "{\"length\": 15, \"width\": 20, \"height\": 15}",
-                "note" => "Hoan dep trai",
+                "note" => "Nothing",
                 "created_at" => \Carbon\Carbon::now(),
                 "pickup_location_address" => "56 Hoàng Diệu, Q. Hải Châu, Đà Nẵng, Vietnam",
                 "destination_address" => "325 Điện Biên Phủ, Thanh Khê, Đà Nẵng, Vietnam",
@@ -49,7 +49,7 @@ class RequestShipsTableSeeder extends Seeder
                 "distance" => 5.50,
                 "duration" => 800,
                 "size" => null,
-                "note" => "string",
+                "note" => "It is easy to break",
                 "created_at" => \Carbon\Carbon::now(),
                 "pickup_location_address" => "69 Núi Thành, Hòa Thuận Đông, Q. Hải Châu, Đà Nẵng, Vietnam",
                 "destination_address" => "893 Đương Nguyễn Tất Thành, Xuân Hà, Thanh Khê, Đà Nẵng, Vietnam",
@@ -69,7 +69,7 @@ class RequestShipsTableSeeder extends Seeder
                 "distance" => 5.10,
                 "duration" => 700,
                 "size" => "{\"length\": 30, \"width\": 30, \"height\": 45}",
-                "note" => "Nghi de thuiong",
+                "note" => "Nothing",
                 "created_at" => \Carbon\Carbon::now(),
                 "pickup_location_address" => "90 Hoàng Diệu, Hải Châu, Đà Nẵng, Vietnam",
                 "destination_address" => "893 Đương Nguyễn Tất Thành, Xuân Hà, Thanh Khê, Đà Nẵng, Vietnam",
@@ -89,7 +89,7 @@ class RequestShipsTableSeeder extends Seeder
                 "distance" => 2.80,
                 "duration" => 600,
                 "size" => "{\"length\": 15, \"width\": 20, \"height\": 15}",
-                "note" => "string",
+                "note" => "Nothing",
                 "created_at" => \Carbon\Carbon::now(),
                 "pickup_location_address" => "538-540 QL14B, An Hải Tây, Sơn Trà, Đà Nẵng, Vietnam",
                 "destination_address" => "203 Ông Ích Khiêm, Hải Châu, Đà Nẵng, Vietnam",
@@ -109,7 +109,7 @@ class RequestShipsTableSeeder extends Seeder
                 "distance" => 2.40,
                 "duration" => 480,
                 "size" => "{\"length\": 15, \"width\": 20, \"height\": 15}",
-                "note" => "string",
+                "note" => "Nothing",
                 "created_at" => \Carbon\Carbon::now(),
                 "pickup_location_address" => "785 Ngô Quyền, Đà Nẵng",
                 "destination_address" => "54 Ngô Gia Tự, Đà Nẵng",
@@ -120,7 +120,7 @@ class RequestShipsTableSeeder extends Seeder
                 "id" => 6,
                 "user_id" => $userIds[2],
                 "promo_code_id" => 1,
-                "package_type_id" => 7,
+                "package_type_id" => 5,
                 "receiver_name" => "Nghi Nhan",
                 "receiver_phone" => "0984617351",
                 "pickup_location" => "{\"latitude\":16.049318000000003,\"longitude\":108.21979499999999}",
@@ -129,7 +129,7 @@ class RequestShipsTableSeeder extends Seeder
                 "distance" => 1.78,
                 "duration" => 437,
                 "size" => null,
-                "note" => "string",
+                "note" => "Nothing",
                 "created_at" => \Carbon\Carbon::now(),
                 "pickup_location_address" => "10 Duy Tân, Danang",
                 "destination_address" => "80 Nguyễn Văn Linh, Danang",
@@ -149,7 +149,7 @@ class RequestShipsTableSeeder extends Seeder
                 "distance" => 1,
                 "duration" => 114,
                 "size" => null,
-                "note" => "string",
+                "note" => "Nothing",
                 "created_at" => \Carbon\Carbon::now(),
                 "pickup_location_address" => "393 Trưng Nữ Vương, Đà Nẵng",
                 "destination_address" => "80 Núi Thành",
@@ -157,10 +157,10 @@ class RequestShipsTableSeeder extends Seeder
                 "receiver_verification_code" => RequestShip::randomCode()
             ],
             [
-                "id" => 7,
+                "id" => 8,
                 "user_id" => $userIds[6],
                 "promo_code_id" => 1,
-                "package_type_id" => 7,
+                "package_type_id" => 8,
                 "receiver_name" => "Nghi Ho",
                 "receiver_phone" => "0984617351",
                 "pickup_location" => "{\"latitude\":16.044216,\"longitude\":108.211926}", //16.044216, 108.211926
@@ -169,10 +169,50 @@ class RequestShipsTableSeeder extends Seeder
                 "distance" => 3.9,
                 "duration" => 800,
                 "size" => null,
-                "note" => "string",
+                "note" => "Nothing",
                 "created_at" => \Carbon\Carbon::now(),
                 "pickup_location_address" => "297 Tiểu La, Hải Châu, Đà Nẵng, Vietnam",
                 "destination_address" => "80 Lê Duẩn, Hải Châu, Đà Nẵng, Vietnam",
+                "po_verification_code" => RequestShip::randomCode(),
+                "receiver_verification_code" => RequestShip::randomCode()
+            ],
+            [
+                "id" => 9,
+                "user_id" => $userIds[8],
+                "promo_code_id" => 1,
+                "package_type_id" => 9,
+                "receiver_name" => "Harley Davidson",
+                "receiver_phone" => "0984617351",
+                "pickup_location" => "{\"latitude\":16.085132,\"longitude\":108.151275}", //16.085132, 108.151275
+                "destination" => "{\"latitude\":16.072169,\"longitude\":108.173576}", //16.072169, 108.173576
+                "price" => 14000.00,
+                "distance" => 3.8,
+                "duration" => 400,
+                "size" => null,
+                "note" => "Nothing",
+                "created_at" => \Carbon\Carbon::now(),
+                "pickup_location_address" => "129 Nguyễn Chánh, Hòa Khánh Bắc, Liên Chiểu, Đà Nẵng, Vietnam",
+                "destination_address" => "10 Kinh Dương Vương, Hòa Minh, Liên Chiểu, Đà Nẵng, Vietnam",
+                "po_verification_code" => RequestShip::randomCode(),
+                "receiver_verification_code" => RequestShip::randomCode()
+            ],
+            [
+                "id" => 10,
+                "user_id" => $userIds[10],
+                "promo_code_id" => 1,
+                "package_type_id" => 8,
+                "receiver_name" => "Nghi Ho",
+                "receiver_phone" => "0984617351",
+                "pickup_location" => "{\"latitude\":16.071369,\"longitude\":108.220409}", //16.071369, 108.220409
+                "destination" => "{\"latitude\":16.032595,\"longitude\":108.221157}", //16.032595, 108.221157
+                "price" => 14000.00,
+                "distance" => 5.2,
+                "duration" => 800,
+                "size" => null,
+                "note" => "Nothing",
+                "created_at" => \Carbon\Carbon::now(),
+                "pickup_location_address" => "50 Lê Duẩn, Hải Châu, Đà Nẵng, Vietnam",
+                "destination_address" => "33 Xô Viết Nghệ Tĩnh, Hải Châu, Đà Nẵng, Vietnam",
                 "po_verification_code" => RequestShip::randomCode(),
                 "receiver_verification_code" => RequestShip::randomCode()
             ],
