@@ -5,6 +5,7 @@ namespace App\Http\Controllers\PackageOwner;
 use App\Entities\PackageOwner;
 use App\Entities\RequestShip;
 use App\Entities\RequestTracking;
+use App\Entities\Shipper;
 use App\Entities\Trip;
 use App\Http\Controllers\ApiController;
 use App\Traits\FirebaseConnection;
@@ -124,5 +125,67 @@ class PackageOwnerTripController extends ApiController
         );
         $status = 200;
         return response()->json($message, $status);
+    }
+
+    public function sendRequestToDefaultShipper(Request $request)
+    {
+        $rules = [
+            'request_ship_id' => 'required|integer'
+        ];
+
+        $this->validate($request, $rules);
+
+        // Setup model data
+        $dataTrip = $request->all();
+        $packageOwner = Auth::user()->first();
+        $requestShip = RequestShip::getRequestShip($dataTrip['request_ship_id']);
+
+        //validate
+        if ($requestShip->status != RequestTracking::WAITING_REQUEST) {
+            $message = array(
+                'success' => false,
+                'message' => "You cannot use this feature",
+                'code' => 403
+            );
+            $status = 403;
+            return response()->json($message, $status);
+        }
+        $shipper = Shipper::where([
+            ['is_online', Shipper::ONLINE_SHIP],
+            ['is_default', Shipper::STATUS_DEFAULT_SHIPPER]
+        ])->inRandomOrder()->first();
+
+        $dataTrip['shipper_id'] = $shipper->id;
+
+        // Insert data for trip into database
+        $trip = Trip::create($dataTrip);
+
+        // update status of request tracking
+        $status = RequestTracking::ACCEPTED_REQUEST;
+        $requestShipId = $dataTrip['request_ship_id'];
+        $shipperId = $dataTrip['shipper_id'];
+        $this->updateRequestTracking($shipperId, $requestShipId, $status);
+
+        // Retrieve this request ship from package/available/{$requestShipId}
+        $path = 'request-ship/' . $requestShipId;
+        $availablePackage = $this->retrieveData($path);
+        $availablePackage['status'] = $status;
+
+        // Remove this request ship from package/available/{$requestShipId}
+        $this->deleteData($path);
+
+        // Insert this request ship into package/package-owner/{package_owner_id}
+        $path = "package-owner/{$packageOwner->id}/request-ship/{$requestShipId}/status";
+        $this->saveData($path, $status);
+
+        $path = "shipper/{$shipperId}/notification/{$requestShipId}";
+        $this->saveData($path, $availablePackage);
+
+        $message = array(
+            'success' => true,
+            'message' => "Your order just move to our shipper",
+            'code' => 200
+        );
+        return response()->json($message, 200);
     }
 }

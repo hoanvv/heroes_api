@@ -48,6 +48,8 @@ Route::group(['middleware' => ['jwt.auth', 'role:packageOwner']], function() {
     ]]);
     // PO rating
     Route::post('requestShips/rating', 'RequestShip\RequestShipRatingController@index');
+    //
+    Route::post('requestShip/defaultShipper', 'PackageOwner\PackageOwnerTripController@sendRequestToDefaultShipper');
 });
 
 Route::get('/sendSMS/{phoneNumber}', 'SMSController@index');

@@ -38,7 +38,10 @@ class PushNotificationToShipper implements ShouldQueue
      */
     public function handle()
     {
-        $shippers = Shipper::where('is_online', Shipper::ONLINE_SHIP)->get()->toArray();
+        $shippers = Shipper::where([
+            ['is_online', Shipper::ONLINE_SHIP],
+            ['is_default', Shipper::STATUS_NORMAL_SHIPPER]
+        ])->get()->toArray();
         $pickup = [
             'latitude' => $this->data['pickup_latitude'],
             'longitude' => $this->data['pickup_longitude']
