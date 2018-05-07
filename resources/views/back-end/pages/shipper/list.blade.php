@@ -106,7 +106,7 @@
                             <div class="social for-five">
                                 <ul>
                                     <li class="entypo-1">
-                                        <a href="" data-toggle="tooltip" title="Edit">
+                                        <a href="shipper/{{$shipper->id}}/edit" data-toggle="tooltip" title="Edit">
                                             <i class="fa fa-pencil-square-o" aria-hidden="true" style="color:#0b91ea; font-size: 2.2em"></i>
                                         </a>
                                     </li>

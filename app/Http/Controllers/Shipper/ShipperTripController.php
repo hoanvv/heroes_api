@@ -180,8 +180,9 @@ class ShipperTripController extends ApiController
             // Send verification code to receiver
             $receiverPhone = $requestShip->receiver_phone;
             $receiverCode = $requestShip->receiver_verification_code;
+            $message = "Sender: {$requestShipOwner->name}, Package Type: {$requestShip->packageType->name}, Code: $receiverCode";
 
-            $response = $this->sendNormalSMS($receiverPhone, $receiverCode);
+            $response = $this->sendNormalSMS($receiverPhone, $message);
             $responseObject = json_decode($response);
             if (!$responseObject->success) {
                 $message = array(

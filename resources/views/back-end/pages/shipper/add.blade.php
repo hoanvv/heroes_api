@@ -1,23 +1,34 @@
 @extends('back-end.layouts.app')
 @section('content')
 <div class="container">
-    <h1>Add New User</h1>
+    <h1>Add New Shipper</h1>
     <div class="row">
         <div class="col-sm-8 col-xs-12">
             <div class="card card-block sameheight-item">
                 <div class="title-block">
-                    <h3 class="title"> User's Information</h3>
+                    <h3 class="title"> Shipper's Information</h3>
                 </div>
 
-                <form method="post" action="/admin/user" enctype="multipart/form-data" class="form-validate-user-add">
+                <form method="post" action="/admin/shipper" enctype="multipart/form-data" class="form-validate-user-add">
                     {{ csrf_field() }}
-                    <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
-                        <label class="control-label">Name</label>
-                        <input type="text" name="name" class="form-control boxed" placeholder="John Smith">
+                    <div class="form-group {{ $errors->has('first_name') ? ' has-error' : '' }}">
+                        <label class="control-label">First Name</label>
+                        <input type="text" name="first_name" class="form-control boxed" placeholder="John">
 
-                        @if ($errors->has('name'))
+                        @if ($errors->has('first_name'))
                             <span class="help-block">
-                                <strong>{{ $errors->first('name') }}</strong>
+                                <strong>{{ $errors->first('first_name') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+
+                    <div class="form-group {{ $errors->has('last_name') ? ' has-error' : '' }}">
+                        <label class="control-label">Last Name</label>
+                        <input type="text" name="last_name" class="form-control boxed" placeholder="Smith">
+
+                        @if ($errors->has('last_name'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('last_name') }}</strong>
                             </span>
                         @endif
                     </div>
@@ -44,61 +55,6 @@
                         @endif
                     </div>
 
-                    <div class="form-group {{ $errors->has('birthday') ? ' has-error' : '' }}">
-                        <label class="control-label">Birthday</label>
-                        <input type="date" name="birthday" class="form-control boxed">
-
-                        @if ($errors->has('birthday'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('birthday') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-
-                    <div class="form-group {{ $errors->has('is_admin') ? ' has-error' : '' }}">
-                        <label class="control-label">Role</label>
-                        {{
-                            Form::select(
-                                'is_admin',
-                                array('' => 'I am...', '0' => 'Member', '1' => 'Admin'),
-                                null,
-                                ['class' => 'form-control boxed']
-                            )
-                        }}
-                        @if ($errors->has('is_admin'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('is_admin') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-
-                    <div class="form-group {{ $errors->has('gender') ? ' has-error' : '' }}">
-                        <label class="control-label">Gender</label>
-                        <select name="gender" class="form-control boxed">
-                            <option value="">I am...</option>
-                            <option value="0">Male</option>
-                            <option value="1">Female</option>
-                            <option value="2">Other</option>
-                        </select>
-
-                        @if ($errors->has('gender'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('gender') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-
-                    <div class="form-group {{ $errors->has('address') ? ' has-error' : '' }}">
-                        <label class="control-label">Address</label>
-                        <input type="text" name="address" class="form-control boxed"  placeholder="Hoa Khanh, Lien Chieu, Danang">
-
-                        @if ($errors->has('address'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('address') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-
                     <div class="form-group {{ $errors->has('phone') ? ' has-error' : '' }}">
                         <label class="control-label">Phone</label>
                         <input type="text" name="phone" class="form-control boxed" placeholder="0984617361">
@@ -117,28 +73,6 @@
                         @if ($errors->has('identity_card'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('identity_card') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-
-                    <div class="form-group {{ $errors->has('position') ? ' has-error' : '' }}">
-                        <label class="control-label">Position</label>
-                        <input type="text" name="position" class="form-control boxed" placeholder="Position">
-
-                        @if ($errors->has('position'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('position') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-
-                    <div class="form-group {{ $errors->has('major') ? ' has-error' : '' }}">
-                        <label class="control-label">Major</label>
-                        <input type="text" name="major" class="form-control boxed" placeholder="Major">
-
-                        @if ($errors->has('major'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('major') }}</strong>
                             </span>
                         @endif
                     </div>
