@@ -72,7 +72,8 @@ class ShipperController extends Controller
         $shipper = Shipper::findOrFail($id);
 
         $shipper->fill($request->only([
-            'identity_card'
+            'identity_card',
+            'rating'
         ]));
 
         $user = $shipper->user;
@@ -106,5 +107,53 @@ class ShipperController extends Controller
     public function delete($id)
     {
 
+    }
+
+    public function changeShippingStatus($shipperId)
+    {
+        $shipper = Shipper::findOrFail($shipperId);
+
+        $notCompletedTrip = Shipper::getNotCompletedRequestShipList($shipper->id);
+
+        if ($notCompletedTrip && $shipper->is_online == Shipper::ONLINE_SHIP) {
+            session()->flash('message_error', 'This shipper cannot turn off if he dont complete to deliver all package that he picked up');
+            return redirect()->back();
+        }
+
+        $shipper->is_online = (int)!$shipper->is_online;
+        $shipper->save();
+
+        if ($shipper->is_online) {
+            $value = "This shipper is online";
+        } else {
+            $value = "This shipper is offline";
+        }
+
+        session()->flash('message_success', $value);
+        return redirect()->back();
+
+    }
+
+    public function showOutcome($shipperId)
+    {
+        $shipper = Shipper::with('user')->findOrFail($shipperId);
+        $totalDeliveredOrder = count(Shipper::getRequestShipList($shipperId));
+        $totalCancelledOrder = count(Shipper::getCancelledRequestList($shipperId));
+
+        $totalIncomeData = Shipper::getTotalOutcome("TOTAL", $shipperId);
+        $totalIncome = is_array($totalIncomeData) ? $totalIncomeData['total'] : $totalIncomeData->total;
+        $dailyIncomeData = Shipper::getTotalOutcome('DAILY', $shipperId);
+        $dailyIncome = is_array($dailyIncomeData) ? $dailyIncomeData['total'] : $dailyIncomeData->total;
+        $weeklyIncomeData = Shipper::getTotalOutcome('WEEKLY', $shipperId);
+        $weeklyIncome = is_array($weeklyIncomeData) ? $weeklyIncomeData['total'] : $weeklyIncomeData->total;
+//        dd($totalIncome);
+        return view('back-end.pages.shipper.outcome', compact([
+            'shipper',
+            'totalDeliveredOrder',
+            'totalCancelledOrder',
+            'totalIncome',
+            'dailyIncome',
+            'weeklyIncome'
+        ]));
     }
 }

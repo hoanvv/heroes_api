@@ -111,6 +111,25 @@ class Shipper extends User
         return $records;
     }
 
+    public static function getCancelledRequestList($shipperId)
+    {
+        $records = DB::select(
+            'SELECT rs.pickup_location, rs.destination, rt1.status, rs.id'
+            . ' FROM trips t'
+            . ' JOIN request_ships rs ON (t.request_ship_id = rs.id)'
+            . ' JOIN request_trackings rt1 ON (rs.id = rt1.request_ship_id)'
+            . ' LEFT OUTER JOIN request_trackings rt2 ON (rs.id = rt2.request_ship_id AND'
+            . ' (rt1.changed_at < rt2.changed_at OR rt1.changed_at = rt2.changed_at AND rt1.id < rt2.id))'
+            . ' WHERE rt2.id IS NULL AND t.shipper_id = :shipper_id'
+            . ' AND rt1.status = :status',
+            [
+                'shipper_id' => $shipperId,
+                'status' => RequestTracking::CANCELLED_REQUEST,
+            ]
+        );
+
+        return $records;
+    }
     public static function getTotalOutcome($factor, $shipperId)
     {
         $condition = '';
@@ -129,6 +148,9 @@ class Shipper extends User
                 $currentMonth = (int)date('m');
                 $currentYear = (int)date('Y');
                 $condition = "MONTH(changed_at) = {$currentMonth} AND YEAR(changed_at) = {$currentYear}";
+                break;
+            case "TOTAL":
+                $condition = 1;
                 break;
             default:
                 return ['total' => 0];

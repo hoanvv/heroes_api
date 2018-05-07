@@ -77,8 +77,9 @@
                     <th>Email</th>
                     <th>Phone</th>
                     <th>Status</th>
-                    <th>Rating</th>
+                    <th>Type</th>
                     <th>View/Edit Document(s)</th>
+                    <th>Outcome</th>
                     <th>Method</th>
                 </tr>
             </thead>
@@ -96,9 +97,14 @@
                            style="color:{{$shipper->is_online == 1 ? "#A2E070" : "#ccc"}}; font-size: 2em">
                         </i>
                     </td>
-                    <td style="text-align: center">{{$shipper->rating}}</td>
+                    <td style="text-align: center">{{$shipper->is_default ? "Default" : "Normal"}}</td>
                     <td style="text-align: center">
-                        <a href="#" style="font-size: 2em"><i class="fa fa-folder-open-o" aria-hidden="true"></i></a>
+                        <a href="shipper/{{$shipper->id}}/document" target="_blank" style="font-size: 2em"><i class="fa fa-folder-open-o" aria-hidden="true"></i></a>
+                    </td>
+                    <td style="text-align: center">
+                        <a href="shipper/{{$shipper->id}}/outcome" target="_blank" style="font-size: 2em">
+                            <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                        </a>
                     </td>
                     <td style="text-align: center">
                         <div class="share-button">
@@ -110,22 +116,25 @@
                                             <i class="fa fa-pencil-square-o" aria-hidden="true" style="color:#0b91ea; font-size: 2.2em"></i>
                                         </a>
                                     </li>
+                                    @if($shipper->is_online != 1)
                                     <li class="entypo-2">
-                                        <a href="#" data-toggle="tooltip" title="Make online">
+                                        <a href="shipper/{{$shipper->id}}/changeStatus" data-toggle="tooltip" title="Make online">
                                             <i class="fa fa-check-circle-o"
                                                aria-hidden="true"
                                                style="color:#59b50e; font-size: 2.2em">
                                             </i>
                                         </a>
                                     </li>
+                                    @else
                                     <li class="entypo-3">
-                                        <a href="#" data-toggle="tooltip" title="Make offline">
+                                        <a href="shipper/{{$shipper->id}}/changeStatus" data-toggle="tooltip" title="Make offline">
                                             <i class="fa fa-check-circle-o"
                                                aria-hidden="true"
                                                style="color:#252020; font-size: 2.2em">
                                             </i>
                                         </a>
                                     </li>
+                                    @endif
                                     <li class="entypo-4">
                                         <a href="" data-toggle="tooltip" title="Delete">
                                             <i class="fa fa-trash" aria-hidden="true" style="color:red; font-size: 2.2em"></i>
@@ -146,8 +155,9 @@
                     <th>Email</th>
                     <th>Phone</th>
                     <th>Status</th>
-                    <th>Rating</th>
+                    <th>Type</th>
                     <th>View/Edit Document(s)</th>
+                    <th>Outcome</th>
                     <th>Method</th>
                 </tr>
             </tfoot>

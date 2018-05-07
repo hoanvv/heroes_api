@@ -24,4 +24,7 @@ Route::prefix('admin')->group(function () {
     Route::post('logout', 'BackEnd\LoginController@logout')->name('admin.logout');
     Route::resource('delivery-request', 'BackEnd\RequestShip\RequestShipController');
     Route::resource('shipper', 'BackEnd\Shipper\ShipperController');
+    Route::get('shipper/{id}/document', 'BackEnd\Document\DocumentController@index');
+    Route::get('shipper/{shipperId}/changeStatus', 'BackEnd\Shipper\ShipperController@changeShippingStatus');
+    Route::get('shipper/{shipperId}/outcome', 'BackEnd\Shipper\ShipperController@showOutcome');
 });

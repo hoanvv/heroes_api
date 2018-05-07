@@ -173,12 +173,15 @@ class PackageOwnerTripController extends ApiController
 
         // Remove this request ship from package/available/{$requestShipId}
         $this->deleteData($path);
-
+        // Insert this request ship into shipper/{shipper_id}/request-ship
+        $path = "shipper/{$shipperId}/request-ship/{$requestShipId}";
+        $this->saveData($path, $availablePackage);
         // Insert this request ship into package/package-owner/{package_owner_id}
         $path = "package-owner/{$packageOwner->id}/request-ship/{$requestShipId}/status";
         $this->saveData($path, $status);
 
         $path = "shipper/{$shipperId}/notification/{$requestShipId}";
+        $availablePackage['shipper_id'] = $shipperId;
         $this->saveData($path, $availablePackage);
 
         $message = array(

@@ -72,6 +72,17 @@
                             @endif
                         </div>
 
+                        <div class="form-group {{ $errors->has('rating') ? ' has-error' : '' }}">
+                            <label class="control-label">Identity Card</label>
+                            <input type="text" name="rating" class="form-control boxed" value="{{$shipper->rating}}" placeholder="4.00">
+
+                            @if ($errors->has('rating'))
+                                <span class="help-block">
+                                <strong>{{ $errors->first('rating') }}</strong>
+                            </span>
+                            @endif
+                        </div>
+
                         <div class="form-group {{ $errors->has('avatar') ? ' has-error' : '' }}">
                             <label class="control-label">Avatar</label>
                             <div class="row">
