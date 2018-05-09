@@ -1,12 +1,12 @@
 @extends('back-end.layouts.app')
 @section('content')
     <div class="container">
-        <h2>Edit User</h2>
+        <h2>Edit Shipper</h2>
         <div class="row">
             <div class="col-sm-8 col-xs-12">
                 <div class="card card-block sameheight-item">
                     <div class="title-block">
-                        <h3 class="title"> User's Information</h3>
+                        <h3 class="title"> Shipper's Information</h3>
                     </div>
 
                     <form method="post" action="/admin/shipper/{{ $shipper->id }}" enctype="multipart/form-data" class="form-validate-user-update">
@@ -90,7 +90,18 @@
                                     <input type="file" name="avatar" />
                                 </div>
                                 <div class="col-sm-4">
+                                    @if($shipper->avatar)
                                     <img src="{{url("storage/{$shipper->avatar}")}}" class="profile-avatar" style="width: 100%; border: 3px solid darkgray" />
+                                    @else
+                                    <i
+                                        style="width:100%; font-size: 15em; text-align: center"
+                                        class="fa fa-user-circle-o"
+                                        aria-hidden="true"
+                                        class="profile-avatar"
+                                    >
+
+                                    </i>
+                                    @endif
                                 </div>
                             </div>
 

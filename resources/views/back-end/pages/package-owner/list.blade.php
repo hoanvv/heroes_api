@@ -33,7 +33,7 @@
             z-index: 2;
         }
         .share-button .for-five.active {
-            left: -35px;
+            left: -20px;
             top: -11px;
         }
         .share-button .social.active {
@@ -44,7 +44,7 @@
             position: absolute;
             bottom: 0px;
             right: 75%;
-            top: 100%;
+            top: 190%;
         }
         .share-button .social {
             display: none;
@@ -68,7 +68,7 @@
 @section('content')
 <section id="user-list">
     <div class="container">
-        <h3>List Of Shippers <a href="/admin/shipper/create">Add New</a></h3>
+        <h3>List Of Package Owners <a href="/admin/po/create">Add New</a></h3>
         <table id="list-users" class="cell-border hover" cellspacing="0" width="100%">
             <thead>
                 <tr>
@@ -77,77 +77,42 @@
                     <th>Email</th>
                     <th>Phone</th>
                     <th>Status</th>
-                    <th>Type</th>
-                    <th>View/Edit Document(s)</th>
-                    <th>Outcome</th>
                     <th>Method</th>
                 </tr>
             </thead>
             <tbody>
             <?php $i = 0;?>
-            @foreach($shippers as $shipper)
-                <tr style="{{$shipper->user->blocked == 1 ? "background-color: #e8e5e5" : ""}}" >
+            @foreach($pos as $po)
+                <tr style="{{$po->blocked == 1 ? "background-color: #e8e5e5" : ""}}" >
                     <td>{{++$i}}</td>
-                    <td>{{$shipper->user->first_name}} {{$shipper->user->last_name}}</td>
-                    <td>{{$shipper->user->email}}</td>
-                    <td>{{$shipper->user->phone}}</td>
-                    @if ($shipper->user->blocked == 0)
-                    <td style="text-align: center">
-                        <i class="fa fa-check-circle-o"
-                           aria-hidden="true"
-                           style="color:{{$shipper->is_online == 1 ? "#A2E070" : "#ccc"}}; font-size: 2em">
-                        </i>
-                    </td>
+                    <td>{{$po->first_name}} {{$po->last_name}}</td>
+                    <td>{{$po->email}}</td>
+                    <td>{{$po->phone}}</td>
+                    @if ($po->blocked == 0)
+                    <td style="text-align: center">Un blocked</td>
                     @else
                     <td style="text-align: center">Blocked</td>
                     @endif
-                    <td style="text-align: center">{{$shipper->is_default ? "Default" : "Normal"}}</td>
-                    <td style="text-align: center">
-                        <a href="shipper/{{$shipper->id}}/document" target="_blank" style="font-size: 2em"><i class="fa fa-folder-open-o" aria-hidden="true"></i></a>
-                    </td>
-                    <td style="text-align: center">
-                        <a href="shipper/{{$shipper->id}}/outcome" target="_blank" style="font-size: 2em">
-                            <i class="fa fa-bar-chart" aria-hidden="true"></i>
-                        </a>
-                    </td>
                     <td style="text-align: center">
                         <div class="share-button">
                             <span style="font-size: 2em"><i class="fa fa-cog" aria-hidden="true"></i></span>
                             <div class="social for-five">
                                 <ul>
                                     <li class="entypo-1">
-                                        <a href="shipper/{{$shipper->id}}/edit" data-toggle="tooltip" title="Edit">
+                                        <a href="po/{{$po->id}}/edit" data-toggle="tooltip" title="Edit">
                                             <i class="fa fa-pencil-square-o" aria-hidden="true" style="color:#0b91ea; font-size: 2.2em"></i>
                                         </a>
                                     </li>
-                                    @if($shipper->is_online != 1)
-                                    <li class="entypo-2">
-                                        <a href="shipper/{{$shipper->id}}/changeStatus" data-toggle="tooltip" title="Make online">
-                                            <i class="fa fa-check-circle-o"
-                                               aria-hidden="true"
-                                               style="color:#59b50e; font-size: 2.2em">
-                                            </i>
-                                        </a>
-                                    </li>
-                                    @else
-                                    <li class="entypo-3">
-                                        <a href="shipper/{{$shipper->id}}/changeStatus" data-toggle="tooltip" title="Make offline">
-                                            <i class="fa fa-check-circle-o"
-                                               aria-hidden="true"
-                                               style="color:#252020; font-size: 2.2em">
-                                            </i>
-                                        </a>
-                                    </li>
-                                    @endif
-                                    @if($shipper->user->blocked == 0)
+
+                                    @if($po->blocked == 0)
                                     <li class="entypo-4">
-                                        <a href="shipper/{{$shipper->id}}/block" data-toggle="tooltip" title="Block">
+                                        <a href="po/{{$po->id}}/block" data-toggle="tooltip" title="Block">
                                             <i class="fa fa-ban" aria-hidden="true" style="color:red; font-size: 2.2em"></i>
                                         </a>
                                     </li>
                                     @else
                                     <li class="entypo-4">
-                                        <a href="shipper/{{$shipper->id}}/block" data-toggle="tooltip" title="Unblock">
+                                        <a href="po/{{$po->id}}/block" data-toggle="tooltip" title="Unblock">
                                             <i class="fa fa-ban" aria-hidden="true" style="color:#252020; font-size: 2.2em"></i>
                                         </a>
                                     </li>
@@ -167,9 +132,6 @@
                     <th>Email</th>
                     <th>Phone</th>
                     <th>Status</th>
-                    <th>Type</th>
-                    <th>View/Edit Document(s)</th>
-                    <th>Outcome</th>
                     <th>Method</th>
                 </tr>
             </tfoot>

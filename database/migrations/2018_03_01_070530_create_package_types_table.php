@@ -22,7 +22,7 @@ class CreatePackageTypesTable extends Migration
             $table->integer('optional_package')->default(PackageType::NORMAL_PACKAGE);
             $table->integer('start_weight')->nullable();
             $table->integer('end_weight')->nullable();
-            $table->float('price');
+            $table->double('price');
             $table->timestamps();
         });
     }

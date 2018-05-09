@@ -27,4 +27,8 @@ Route::prefix('admin')->group(function () {
     Route::get('shipper/{id}/document', 'BackEnd\Document\DocumentController@index');
     Route::get('shipper/{shipperId}/changeStatus', 'BackEnd\Shipper\ShipperController@changeShippingStatus');
     Route::get('shipper/{shipperId}/outcome', 'BackEnd\Shipper\ShipperController@showOutcome');
+    Route::get('shipper/{shipperId}/block', 'BackEnd\Shipper\ShipperController@BlockShipper');
+    Route::resource('po', 'BackEnd\PackageOwner\PackageOwnerController');
+    Route::get('po/{id}/block', 'BackEnd\PackageOwner\PackageOwnerController@BlockActivity');
+    Route::resource('package-type', 'BackEnd\PackageType\PackageTypeController');
 });

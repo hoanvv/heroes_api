@@ -156,4 +156,32 @@ class ShipperController extends Controller
             'weeklyIncome'
         ]));
     }
+
+    public function BlockShipper($shipperId)
+    {
+        $shipper = Shipper::findOrFail($shipperId);
+
+        $notCompletedTrip = Shipper::getNotCompletedRequestShipList($shipper->id);
+
+        if ($notCompletedTrip && $shipper->is_online == Shipper::ONLINE_SHIP) {
+            session()->flash('message_error', 'This shipper cannot be blocked if he dont complete to deliver all package that he picked up');
+            return redirect()->back();
+        }
+
+        $shipper->is_online = 0;
+        $shipper->save();
+
+        $user = $shipper->user;
+        $user->blocked = (int)!$user->blocked;
+        $user->save();
+
+        if ($user->blocked) {
+            $value = "This shipper is blocked";
+        } else {
+            $value = "This shipper is unblocked";
+        }
+
+        session()->flash('message_success', $value);
+        return redirect()->back();
+    }
 }

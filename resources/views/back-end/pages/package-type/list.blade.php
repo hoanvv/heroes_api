@@ -33,7 +33,7 @@
             z-index: 2;
         }
         .share-button .for-five.active {
-            left: -35px;
+            left: -20px;
             top: -11px;
         }
         .share-button .social.active {
@@ -44,7 +44,7 @@
             position: absolute;
             bottom: 0px;
             right: 75%;
-            top: 100%;
+            top: 190%;
         }
         .share-button .social {
             display: none;
@@ -68,90 +68,56 @@
 @section('content')
 <section id="user-list">
     <div class="container">
-        <h3>List Of Shippers <a href="/admin/shipper/create">Add New</a></h3>
+        <h3>List Of package types <a href="/admin/package-type/create">Add New</a></h3>
         <table id="list-users" class="cell-border hover" cellspacing="0" width="100%">
             <thead>
                 <tr>
                     <th>#</th>
                     <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Status</th>
-                    <th>Type</th>
-                    <th>View/Edit Document(s)</th>
-                    <th>Outcome</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Option package</th>
+                    <th>Start weight</th>
+                    <th>End weight</th>
                     <th>Method</th>
                 </tr>
             </thead>
             <tbody>
             <?php $i = 0;?>
-            @foreach($shippers as $shipper)
-                <tr style="{{$shipper->user->blocked == 1 ? "background-color: #e8e5e5" : ""}}" >
+            @foreach($packageTypes as $packageType)
+                <tr style="{{$packageType->blocked == 1 ? "background-color: #e8e5e5" : ""}}" >
                     <td>{{++$i}}</td>
-                    <td>{{$shipper->user->first_name}} {{$shipper->user->last_name}}</td>
-                    <td>{{$shipper->user->email}}</td>
-                    <td>{{$shipper->user->phone}}</td>
-                    @if ($shipper->user->blocked == 0)
-                    <td style="text-align: center">
-                        <i class="fa fa-check-circle-o"
-                           aria-hidden="true"
-                           style="color:{{$shipper->is_online == 1 ? "#A2E070" : "#ccc"}}; font-size: 2em">
-                        </i>
-                    </td>
+                    <td>{{$packageType->name}}</td>
+                    <td>{{$packageType->description}}</td>
+                    <td>{{$packageType->price}}</td>
+                    @if ($packageType->optional_package == 1)
+                    <td style="text-align: center">X</td>
                     @else
-                    <td style="text-align: center">Blocked</td>
+                    <td style="text-align: center"></td>
                     @endif
-                    <td style="text-align: center">{{$shipper->is_default ? "Default" : "Normal"}}</td>
-                    <td style="text-align: center">
-                        <a href="shipper/{{$shipper->id}}/document" target="_blank" style="font-size: 2em"><i class="fa fa-folder-open-o" aria-hidden="true"></i></a>
-                    </td>
-                    <td style="text-align: center">
-                        <a href="shipper/{{$shipper->id}}/outcome" target="_blank" style="font-size: 2em">
-                            <i class="fa fa-bar-chart" aria-hidden="true"></i>
-                        </a>
-                    </td>
+                    <td>{{$packageType->start_weight}}</td>
+                    <td>{{$packageType->end_weight}}</td>
                     <td style="text-align: center">
                         <div class="share-button">
                             <span style="font-size: 2em"><i class="fa fa-cog" aria-hidden="true"></i></span>
                             <div class="social for-five">
                                 <ul>
                                     <li class="entypo-1">
-                                        <a href="shipper/{{$shipper->id}}/edit" data-toggle="tooltip" title="Edit">
+                                        <a href="package-type/{{$packageType->id}}/edit" data-toggle="tooltip" title="Edit">
                                             <i class="fa fa-pencil-square-o" aria-hidden="true" style="color:#0b91ea; font-size: 2.2em"></i>
                                         </a>
                                     </li>
-                                    @if($shipper->is_online != 1)
-                                    <li class="entypo-2">
-                                        <a href="shipper/{{$shipper->id}}/changeStatus" data-toggle="tooltip" title="Make online">
-                                            <i class="fa fa-check-circle-o"
-                                               aria-hidden="true"
-                                               style="color:#59b50e; font-size: 2.2em">
-                                            </i>
-                                        </a>
-                                    </li>
-                                    @else
-                                    <li class="entypo-3">
-                                        <a href="shipper/{{$shipper->id}}/changeStatus" data-toggle="tooltip" title="Make offline">
-                                            <i class="fa fa-check-circle-o"
-                                               aria-hidden="true"
-                                               style="color:#252020; font-size: 2.2em">
-                                            </i>
-                                        </a>
-                                    </li>
-                                    @endif
-                                    @if($shipper->user->blocked == 0)
+
                                     <li class="entypo-4">
-                                        <a href="shipper/{{$shipper->id}}/block" data-toggle="tooltip" title="Block">
-                                            <i class="fa fa-ban" aria-hidden="true" style="color:red; font-size: 2.2em"></i>
+                                        <form id="delete-pt-{{$packageType->id}}" action="package-type/{{$packageType->id}}" method="post" style="display: none">
+                                            {{ csrf_field() }}
+                                            {{ method_field('DELETE') }}
+                                        </form>
+                                        <a href="javascript: document.getElementById('delete-pt-{{$packageType->id}}').submit();" data-toggle="tooltip" title="Delete">
+                                            <i class="fa fa-trash" aria-hidden="true" style="color:red; font-size: 2.2em"></i>
                                         </a>
                                     </li>
-                                    @else
-                                    <li class="entypo-4">
-                                        <a href="shipper/{{$shipper->id}}/block" data-toggle="tooltip" title="Unblock">
-                                            <i class="fa fa-ban" aria-hidden="true" style="color:#252020; font-size: 2.2em"></i>
-                                        </a>
-                                    </li>
-                                    @endif
+
                                 </ul>
                             </div>
                         </div>
@@ -164,12 +130,11 @@
                 <tr>
                     <th>#</th>
                     <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Status</th>
-                    <th>Type</th>
-                    <th>View/Edit Document(s)</th>
-                    <th>Outcome</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Option package</th>
+                    <th>Start weight</th>
+                    <th>End weight</th>
                     <th>Method</th>
                 </tr>
             </tfoot>

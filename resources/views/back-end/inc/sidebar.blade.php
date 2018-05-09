@@ -9,7 +9,7 @@
                     <span class="l l4"></span>
                     <span class="l l5"></span>
                 </div>
-                MediVia Admin
+                Heroes Admin
             </div>
         </div>
         <nav class="menu">
@@ -25,9 +25,9 @@
                     <a href="/admin/po"><i class="fa fa-users"></i>Package Owner<i class="fa arrow"></i></a>
                 </li>
 
-                <li>
-                    <a href="/admin/admin"><i class="fa fa-user-circle-o"></i>Admin<i class="fa arrow"></i></a>
-                </li>
+                {{--<li>--}}
+                    {{--<a href="/admin/admin"><i class="fa fa-user-circle-o"></i>Admin<i class="fa arrow"></i></a>--}}
+                {{--</li>--}}
 
                 <li>
                     <a href="/admin/package-type"><i class="fa fa-archive"></i>Package Type<i class="fa arrow"></i></a>

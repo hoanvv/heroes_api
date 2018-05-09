@@ -39,6 +39,10 @@ class AuthController extends ApiController
         // all good so return the token
         $user = Auth::user();
 
+        if ($user->isBlocked()) {
+            return response()->json(['success' => false, 'error' => 'Your account was blocked'], 401);
+        }
+
         $userId = $user->id;
         $roleId = $user->role_id;
         $fullName = $user->first_name . ' ' . $user->last_name;
