@@ -37,6 +37,9 @@
                     <a href="/admin/delivery-request"><i class="fa fa-street-view"></i>Delivery Request<i class="fa arrow"></i></a>
                 </li>
 
+                <li>
+                    <a href="/admin/feedback"><i class="fa fa-commenting" aria-hidden="true"></i>Feedback<i class="fa arrow"></i></a>
+                </li>
             </ul>
         </nav>
     </div>

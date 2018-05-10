@@ -218,7 +218,7 @@ class RequestShip extends Model
     public static function getRequestShipList()
     {
         $records = DB::select(
-            'SELECT rs.id, rs.created_at, rs.pickup_location_address, rs.destination_address, rt1.status, rs.price, u.first_name, u.last_name, pt.name, t.shipper_id'
+            'SELECT rs.id, rs.created_at, t.package_owner_comment, rs.pickup_location_address, rs.destination_address, rt1.status, rs.price, u.first_name, u.last_name, pt.name, t.shipper_id'
             . ' FROM request_ships rs'
             . ' LEFT JOIN trips t ON (t.request_ship_id = rs.id)'
             . ' JOIN users u ON (u.id = rs.user_id)'
@@ -231,7 +231,25 @@ class RequestShip extends Model
 
         return $records;
     }
+    //
+    public static function getCompletedRequestShipList()
+    {
+        $records = DB::select(
+            'SELECT t.package_owner_comment, t.created_at, rs.id'
+            . ' FROM trips t'
+            . ' JOIN request_ships rs ON (t.request_ship_id = rs.id)'
+            . ' JOIN request_trackings rt1 ON (rs.id = rt1.request_ship_id)'
+            . ' LEFT OUTER JOIN request_trackings rt2 ON (rs.id = rt2.request_ship_id AND'
+            . ' (rt1.changed_at < rt2.changed_at OR rt1.changed_at = rt2.changed_at AND rt1.id < rt2.id))'
+            . ' WHERE rt2.id IS NULL AND t.package_owner_comment IS NOT NULL'
+            . ' AND rt1.status = :status',
+            [
+                'status' => RequestTracking::COMPLETED_TRIP,
+            ]
+        );
 
+        return $records;
+    }
     public static function getRequestShip($requestShipId)
     {
         $records = DB::select(

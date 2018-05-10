@@ -41,7 +41,7 @@
                             @break
 
                             @case(4)
-                            <span> Completed</span>
+                            <a href="#" data-toggle="popover" title="Package Owner's Comment" data-content="{{$requestShip->package_owner_comment}}">Completed</a>
                             @break
                             @default
                             <span></span>
@@ -91,4 +91,11 @@
         'alert_color' => 'alert-danger'
     ])
 @endif
+@endsection
+@section('scripts')
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="popover"]').popover();
+        });
+    </script>
 @endsection
