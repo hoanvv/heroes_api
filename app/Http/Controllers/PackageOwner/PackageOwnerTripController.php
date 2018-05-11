@@ -137,8 +137,8 @@ class PackageOwnerTripController extends ApiController
 
         // Setup model data
         $dataTrip = $request->all();
-        $packageOwner = Auth::user()->first();
         $requestShip = RequestShip::getRequestShip($dataTrip['request_ship_id']);
+        $requestShipTemp = RequestShip::findOrFail($dataTrip['request_ship_id']);
 
         //validate
         if ($requestShip->status != RequestTracking::WAITING_REQUEST) {
@@ -165,20 +165,26 @@ class PackageOwnerTripController extends ApiController
         $requestShipId = $dataTrip['request_ship_id'];
         $shipperId = $dataTrip['shipper_id'];
         $this->updateRequestTracking($shipperId, $requestShipId, $status);
+        // Update price
+        $newPrice = (int)$requestShip->price * 1.2;
+        $requestShipTemp->price = $newPrice;
+        $requestShipTemp->save();
 
         // Retrieve this request ship from package/available/{$requestShipId}
         $path = 'request-ship/' . $requestShipId;
         $availablePackage = $this->retrieveData($path);
         $availablePackage['status'] = $status;
-
+        $availablePackage['price'] = $newPrice;
         // Remove this request ship from package/available/{$requestShipId}
         $this->deleteData($path);
         // Insert this request ship into shipper/{shipper_id}/request-ship
         $path = "shipper/{$shipperId}/request-ship/{$requestShipId}";
         $this->saveData($path, $availablePackage);
         // Insert this request ship into package/package-owner/{package_owner_id}
-        $path = "package-owner/{$packageOwner->id}/request-ship/{$requestShipId}/status";
+        $path = "package-owner/{$requestShip->user_id}/request-ship/{$requestShipId}/status";
         $this->saveData($path, $status);
+        $path = "package-owner/{$requestShip->user_id}/request-ship/{$requestShipId}/price";
+        $this->saveData($path, $newPrice);
 
         $path = "shipper/{$shipperId}/notification/{$requestShipId}";
         $availablePackage['shipper_id'] = $shipperId;
@@ -186,7 +192,7 @@ class PackageOwnerTripController extends ApiController
 
         $message = array(
             'success' => true,
-            'message' => "Your order just move to our shipper",
+            'message' => "Your order just moved to our shipper",
             'code' => 200
         );
         return response()->json($message, 200);
