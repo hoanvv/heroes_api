@@ -163,7 +163,7 @@ class RequestShipsTableSeeder extends Seeder
                 "package_type_id" => 8,
                 "receiver_name" => "Nghi Ho",
                 "receiver_phone" => "0984617351",
-                "pickup_location" => "{\"latitude\":16.044216,\"longitude\":108.211926}", //16.071241, 108.150480
+                "pickup_location" => "{\"latitude\":16.071241,\"longitude\":108.150480}", //16.071241, 108.150480
                 "destination" => "{\"latitude\":16.071074,\"longitude\":108.217616}", //16.071074, 108.217616
                 "price" => 30000.00,
                 "distance" => 9,
