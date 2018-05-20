@@ -28,6 +28,10 @@
                     <td>{{$requestShip->id}}</td>
                     <td>
                         @switch($requestShip->status)
+                            @case(0)
+                            <span> Canceled</span>
+                            @break
+
                             @case(1)
                             <span> Waiting</span>
                             @break

@@ -20,6 +20,10 @@
                             </label>
                             <div class="pagination">
                                 @switch($status)
+                                    @case(0)
+                                    <span> Canceled</span>
+                                    @break
+
                                     @case(1)
                                     <span> Waiting</span>
                                     @break

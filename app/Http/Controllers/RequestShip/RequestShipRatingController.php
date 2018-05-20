@@ -34,7 +34,8 @@ class RequestShipRatingController extends Controller
             . ' FROM trips t'
             . ' JOIN request_ships rs ON (rs.id = t.request_ship_id)'
             . ' JOIN request_trackings rt ON (rt.request_ship_id = rs.id)'
-            . ' WHERE t.shipper_id  = 4 AND rt.status = 4'
+            . ' WHERE t.shipper_id  = :shipper_id AND rt.status = 4',
+            ['shipper_id' => $shipper->id]
         )[0];
 
         $finalTracking = RequestTracking::where([
