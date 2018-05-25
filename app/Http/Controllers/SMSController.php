@@ -17,11 +17,11 @@ class SMSController extends Controller
 
     public function index(Request $request, $phoneNumber)
     {
-         dd($request->input('destination'));
+//         dd($request->input('destination'));
 //        return $this->sendVerifySMS('+840984617351');
-//        $response = $this->sendNormalSMS("0984617351", "Hoan Dep Trai");
-//        $responseObject = json_decode($response);
-//        dd($responseObject->message);
+        $response = $this->sendNormalSMS("984617351", "Hoan Dep Trai");
+        $responseObject = json_decode($response);
+        dd($responseObject);
 //        $accountId = 'AC4a3cc712d39d67b557094d120e423d72';
 //        $token = '0ef10217b31a49f4449e8d219b7cd71b';
 //        $fromNumber = '+17162654424';

@@ -8,9 +8,11 @@ trait SMSTrait
 {
     protected function sendNormalSMS($phoneNumber, $message)
     {
-        $accountId = 'AC4a3cc712d39d67b557094d120e423d72';
-        $token = '0ef10217b31a49f4449e8d219b7cd71b';
-        $fromNumber = '+17162654424';
+        $accountId = 'AC2e29f911e97d5e68a9763975847cbdc7';
+        // AC2e29f911e97d5e68a9763975847cbdc7
+        // AC4a3cc712d39d67b557094d120e423d72
+        $token = '961bb4b9cdaee02351729560fcd789ef';
+        $fromNumber = '+13344599439';
         $phone = '+84' . $phoneNumber;
 
         $client = new Client($accountId, $token);
